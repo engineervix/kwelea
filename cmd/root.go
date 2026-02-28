@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"io/fs"
 
 	"github.com/spf13/cobra"
@@ -24,8 +25,13 @@ Zero runtime dependencies in consuming projects.`,
 }
 
 // Execute initialises the CLI with the embedded assets FS and runs the root command.
-func Execute(embeddedFS fs.FS) error {
+func Execute(embeddedFS fs.FS, ver, commit, date string) error {
 	assets = embeddedFS
+	rootCmd.Version = ver
+	rootCmd.SetVersionTemplate(fmt.Sprintf(
+		"kwelea %s\ncommit: %s\nbuilt:  %s\n",
+		ver, commit, date,
+	))
 	return rootCmd.Execute()
 }
 

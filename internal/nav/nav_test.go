@@ -14,10 +14,10 @@ func createTempDocs(t *testing.T) string {
 	dir := t.TempDir()
 
 	files := map[string]string{
-		"index.md":               "---\ntitle: Home\n---\nWelcome to kwelea.",
-		"01-getting-started.md":  "---\ntitle: Getting Started\n---\nStart here.",
-		"02-installation.md":     "# Installation\nHow to install.",
-		"draft-page.md":          "---\ndraft: true\n---\nThis should never appear.",
+		"index.md":                                    "---\ntitle: Home\n---\nWelcome to kwelea.",
+		"01-getting-started.md":                       "---\ntitle: Getting Started\n---\nStart here.",
+		"02-installation.md":                          "# Installation\nHow to install.",
+		"draft-page.md":                               "---\ndraft: true\n---\nThis should never appear.",
 		filepath.Join("guide", "index.md"):            "---\ntitle: Guide\n---\nGuide overview.",
 		filepath.Join("guide", "01-configuration.md"): "# Configuration\nConfig docs.",
 	}
@@ -101,7 +101,7 @@ func TestStripNumericPrefix(t *testing.T) {
 		{"10-api", "api"},
 		{"1-intro", "intro"},
 		{"123-deep", "deep"},
-		{"guide", "guide"},              // no prefix — unchanged
+		{"guide", "guide"},                   // no prefix — unchanged
 		{"no-prefix-here", "no-prefix-here"}, // starts with letters
 	}
 	for _, tc := range tests {

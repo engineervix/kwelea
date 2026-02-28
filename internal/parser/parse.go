@@ -6,13 +6,13 @@ import (
 	"html/template"
 
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
-	goldmarkast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark"
+	highlighting "github.com/yuin/goldmark-highlighting/v2"
+	goldmarkast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
 	goldmarkhtml "github.com/yuin/goldmark/renderer/html"
 	"github.com/yuin/goldmark/text"
-	highlighting "github.com/yuin/goldmark-highlighting/v2"
 
 	"github.com/engineervix/kwelea/internal/config"
 	"github.com/engineervix/kwelea/internal/nav"

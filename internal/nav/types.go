@@ -18,10 +18,10 @@ type Site struct {
 	Repo         string
 	RepoPlatform string // "github", "gitlab", or "" for unknown/not set
 	BuildCfg     config.BuildConfig
-	ServeCfg config.ServeConfig
-	ThemeCfg config.ThemeConfig
-	Nav      []NavSection // full nav tree, built by this package
-	Pages    []*Page      // flat ordered list for prev/next linking
+	ServeCfg     config.ServeConfig
+	ThemeCfg     config.ThemeConfig
+	Nav          []NavSection // full nav tree, built by this package
+	Pages        []*Page      // flat ordered list for prev/next linking
 }
 
 // NavSection is a labelled group of pages in the sidebar.
@@ -43,7 +43,7 @@ type NavItem struct {
 // HTML and TOC are zero until Phase 3 fills them in via the parser.
 type Page struct {
 	Title                string
-	TitleFromFrontmatter bool          // true when Title came from frontmatter; false when derived from filename
+	TitleFromFrontmatter bool // true when Title came from frontmatter; false when derived from filename
 	Description          string
 	Path                 string        // canonical URL path, e.g. /getting-started/
 	FilePath             string        // source .md file, relative to docs_dir

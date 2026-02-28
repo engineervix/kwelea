@@ -19,8 +19,8 @@ import (
 )
 
 const (
-	wsPath   = "/_kwelea/ws"
-	maxPort  = 10 // try up to base+10 before giving up
+	wsPath  = "/_kwelea/ws"
+	maxPort = 10 // try up to base+10 before giving up
 )
 
 // Start is the entry point for `kwelea serve`. It:
