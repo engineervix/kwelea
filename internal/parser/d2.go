@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"html"
+	"log/slog"
 
 	"github.com/yuin/goldmark"
 	goldmarkast "github.com/yuin/goldmark/ast"
@@ -17,6 +18,7 @@ import (
 	"oss.terrastruct.com/d2/d2lib"
 	"oss.terrastruct.com/d2/d2renderers/d2svg"
 	"oss.terrastruct.com/d2/d2themes/d2themescatalog"
+	"oss.terrastruct.com/d2/lib/log"
 	"oss.terrastruct.com/d2/lib/textmeasure"
 )
 
@@ -87,7 +89,7 @@ func (t *d2Transformer) Transform(doc *goldmarkast.Document, reader text.Reader,
 // — wrapped in a single <div class="d2-diagram"> container. CSS in the built
 // site toggles visibility via [data-theme] on <html>.
 func renderD2Diagram(source string) ([]byte, error) {
-	ctx := context.Background()
+	ctx := log.With(context.Background(), slog.Default())
 
 	// D2 requires a Ruler to measure text dimensions for node labels.
 	ruler, err := textmeasure.NewRuler()
