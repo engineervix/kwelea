@@ -74,6 +74,11 @@ func Build(site *nav.Site, embFS fs.FS, devMode bool) error {
 		}
 	}
 
+	// Pass 3: write search-index.json (uses Page.HTML populated in pass 1).
+	if err := writeSearchIndex(site.Pages, outputDir); err != nil {
+		return fmt.Errorf("writing search index: %w", err)
+	}
+
 	return nil
 }
 

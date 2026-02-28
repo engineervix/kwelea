@@ -1,5 +1,4 @@
 // kwelea — main.js
-// Extracted from _dev/docs-ui.html and extended with copy-button injection.
 
 // ── Theme toggle ──
 const html = document.documentElement;
@@ -41,33 +40,172 @@ if (menuToggle && sidebar && backdrop) {
   });
 }
 
-// ── Search modal ──
+// ── Search ──
 const overlay = document.getElementById('searchOverlay');
-const searchInput = document.getElementById('searchInput');
+const headerSearchInput = document.getElementById('searchInput');
+const modalInput = document.getElementById('searchModalInput');
+const searchResultsEl = document.getElementById('searchResults');
+
+// FlexSearch index — loaded once on first modal open.
+let searchIndex = null;
+let indexLoading = false;
+
+async function loadSearchIndex() {
+  if (searchIndex !== null || indexLoading) return;
+  indexLoading = true;
+  try {
+    const res = await fetch('/search-index.json');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const entries = await res.json();
+
+    searchIndex = new FlexSearch.Document({
+      tokenize: 'forward',
+      document: {
+        id: 'id',
+        index: ['title', 'body'],
+        store: ['title', 'path', 'body'],
+      },
+    });
+    entries.forEach(e => searchIndex.add(e));
+  } catch (err) {
+    console.warn('[kwelea] search index failed to load:', err);
+    searchIndex = null;
+  } finally {
+    indexLoading = false;
+  }
+}
 
 function openSearch() {
   if (!overlay) return;
   overlay.classList.add('open');
-  const modalInput = document.getElementById('searchModalInput');
-  if (modalInput) modalInput.focus();
+  if (modalInput) {
+    modalInput.focus();
+    loadSearchIndex(); // lazy-load on first open
+  }
 }
 
 function closeSearch() {
-  if (overlay) overlay.classList.remove('open');
+  if (!overlay) return;
+  overlay.classList.remove('open');
+  if (modalInput) modalInput.value = '';
+  if (searchResultsEl) searchResultsEl.innerHTML = '<div class="search-empty">Type to search…</div>';
+  focusedIdx = -1;
 }
 
-if (searchInput) searchInput.addEventListener('click', openSearch);
+if (headerSearchInput) headerSearchInput.addEventListener('click', openSearch);
 
 if (overlay) {
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) closeSearch();
-  });
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeSearch(); });
 }
 
 document.addEventListener('keydown', e => {
   if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
-  if (e.key === 'Escape') closeSearch();
+  if (e.key === 'Escape' && overlay && overlay.classList.contains('open')) closeSearch();
 });
+
+// ── Search results rendering ──
+function escapeHTML(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// Extract a ~160-char snippet around the first query match, with terms highlighted.
+function makeSnippet(body, query) {
+  const queryWords = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const lower = body.toLowerCase();
+
+  // Find position of first matching term.
+  let matchPos = 0;
+  for (const word of queryWords) {
+    const idx = lower.indexOf(word);
+    if (idx >= 0) { matchPos = idx; break; }
+  }
+
+  const winStart = Math.max(0, matchPos - 40);
+  const winEnd = Math.min(body.length, winStart + 160);
+  const raw = body.slice(winStart, winEnd);
+  let snippet = (winStart > 0 ? '…' : '') + escapeHTML(raw) + (winEnd < body.length ? '…' : '');
+
+  // Highlight each query term. Escape body first, then mark — so <mark> isn't escaped.
+  queryWords.forEach(word => {
+    const safe = escapeHTML(word).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    snippet = snippet.replace(new RegExp(`(${safe})`, 'gi'), '<mark>$1</mark>');
+  });
+
+  return snippet;
+}
+
+function renderResults(query) {
+  if (!searchResultsEl) return;
+  if (!query.trim()) {
+    searchResultsEl.innerHTML = '<div class="search-empty">Type to search…</div>';
+    focusedIdx = -1;
+    return;
+  }
+  if (!searchIndex) {
+    searchResultsEl.innerHTML = '<div class="search-empty">Loading index…</div>';
+    return;
+  }
+
+  const raw = searchIndex.search(query, { enrich: true, limit: 8 });
+
+  // Deduplicate across title/body field results.
+  const seen = new Set();
+  const docs = [];
+  raw.forEach(fieldResult => {
+    fieldResult.result.forEach(({ id, doc }) => {
+      if (!seen.has(id)) { seen.add(id); docs.push(doc); }
+    });
+  });
+
+  if (docs.length === 0) {
+    searchResultsEl.innerHTML = `<div class="search-empty">No results for "${escapeHTML(query)}"</div>`;
+    focusedIdx = -1;
+    return;
+  }
+
+  searchResultsEl.innerHTML = docs.map(doc => `
+    <a href="${escapeHTML(doc.path)}" class="search-result" onclick="closeSearch()">
+      <div class="search-result-title">${escapeHTML(doc.title)}</div>
+      <div class="search-result-path">${escapeHTML(doc.path)}</div>
+      <div class="search-result-snippet">${makeSnippet(doc.body, query)}</div>
+    </a>
+  `).join('');
+
+  focusedIdx = -1;
+}
+
+// ── Keyboard navigation in results ──
+let focusedIdx = -1;
+
+function moveFocus(delta) {
+  if (!searchResultsEl) return;
+  const items = searchResultsEl.querySelectorAll('.search-result');
+  if (items.length === 0) return;
+  focusedIdx = Math.max(-1, Math.min(items.length - 1, focusedIdx + delta));
+  items.forEach((el, i) => el.classList.toggle('focused', i === focusedIdx));
+  if (focusedIdx >= 0) items[focusedIdx].scrollIntoView({ block: 'nearest' });
+}
+
+if (modalInput) {
+  modalInput.addEventListener('input', () => {
+    renderResults(modalInput.value);
+  });
+
+  modalInput.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); moveFocus(1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); moveFocus(-1); }
+    else if (e.key === 'Enter') {
+      if (focusedIdx >= 0 && searchResultsEl) {
+        const items = searchResultsEl.querySelectorAll('.search-result');
+        if (items[focusedIdx]) items[focusedIdx].click();
+      }
+    }
+  });
+}
 
 // ── ToC scroll spy ──
 const headings = document.querySelectorAll('.prose h2, .prose h3');
@@ -89,7 +227,6 @@ if (headings.length > 0 && tocLinks.length > 0) {
 
 // ── Code copy buttons ──
 // Goldmark wraps highlighted code in .highlight > pre; plain code is just pre.
-// We inject a copy button into every pre inside .prose.
 document.querySelectorAll('.prose pre').forEach(pre => {
   const btn = document.createElement('button');
   btn.className = 'code-copy';
