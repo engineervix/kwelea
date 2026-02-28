@@ -2,10 +2,16 @@
 
 Kwelea is a static site generator for project documentation. Write Markdown in `docs/`, run one command, get a beautiful static site.
 
-Distributed as a single Go binary — install it once globally, use it across all your projects. No Node.js, no Python, no CDN calls, no runtime dependencies in the projects you document.
+Distributed as a single binary — install it once globally, use it across all your projects. No Node.js, no Python, no CDN calls, no runtime dependencies in the projects you document.
 
 ```bash
+# With Go:
 go install github.com/engineervix/kwelea@latest
+
+# Without Go — download the binary for your platform:
+# https://github.com/engineervix/kwelea/releases/latest
+
+kwelea --version
 ```
 
 ## Quickstart
@@ -34,10 +40,10 @@ kwelea build   # build the static site to site/
 
 ```toml
 [site]
-title    = "mylib"
+title    = "fooproject"
 version  = "v1.0.0"
-base_url = "https://yourorg.github.io/mylib"
-repo     = "https://github.com/yourorg/mylib"
+base_url = "https://yourorg.github.io/fooproject"
+repo     = "https://github.com/yourorg/fooproject"
 
 [build]
 docs_dir   = "docs"
@@ -84,11 +90,11 @@ jobs:
 
 ## Named after
 
-The [Quelea](https://en.wikipedia.org/wiki/Quelea) — a genus of small weaver birds. Kwelea *weaves* Markdown, templates, and assets into documentation sites.
+The [Quelea](https://en.wikipedia.org/wiki/Quelea) -- a genus of small weaver birds. Kwelea *weaves* Markdown, templates, and assets into documentation sites.
 
 ## Credits
 
-- Logo icon: [Doc Docx Files SVG](https://www.svgrepo.com/svg/415211/doc-docx-files) from SVG Repo (CC0)
+- Logo icon: [Doc Docx Files SVG Vector](https://www.svgrepo.com/svg/415211/doc-docx-files) from SVG Repo (CC0)
 
 ## Licence
 

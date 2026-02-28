@@ -5,16 +5,21 @@ description: Up and running in five minutes
 
 ## Prerequisites
 
-- Go 1.21 or later
-- A Go project with a `go.mod` file
+- Any project with a `docs/` folder — no Go toolchain required
 
 ## Install
 
 ```bash
+# With Go:
 go install github.com/engineervix/kwelea@latest
+
+# Without Go — download the binary for your platform from GitHub Releases:
+# https://github.com/engineervix/kwelea/releases/latest
 ```
 
-Verify the installation:
+See the [Installation page](installation/) for platform-specific download commands.
+
+Verify:
 
 ```bash
 kwelea --version
