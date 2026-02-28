@@ -1,0 +1,109 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Test
+        run: go test -v ./...
+
+      - name: Vet
+        run: go vet ./...
+
+  build:
+    name: Build (${{ matrix.goos }}-${{ matrix.goarch }})
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    strategy:
+      matrix:
+        include:
+          - { goos: linux,   goarch: amd64 }
+          - { goos: linux,   goarch: arm64 }
+          - { goos: darwin,  goarch: amd64 }
+          - { goos: darwin,  goarch: arm64 }
+          - { goos: windows, goarch: amd64 }
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Build
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: |
+          mkdir -p bin
+          VERSION=$(cat VERSION 2>/dev/null || git describe --tags --always 2>/dev/null || echo 'dev')
+          COMMIT=$(git rev-parse --short HEAD)
+          DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          EXT=""
+          [ "$GOOS" = "windows" ] && EXT=".exe"
+          go build \
+            -ldflags="-s -w -X main.version=${VERSION} -X main.commit=${COMMIT} -X main.date=${DATE}" \
+            -o "bin/kwelea-${GOOS}-${GOARCH}${EXT}" \
+            .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kwelea-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: bin/kwelea-*
+          retention-days: 7
+          if-no-files-found: error
+
+  release:
+    name: Release ${{ github.ref_name }}
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: extractions/setup-just@v3
+
+      - name: Generate release notes
+        run: |
+          just release-notes
+          mv ../LATEST_RELEASE_NOTES.md .
+
+      - name: Set release name
+        id: meta
+        run: echo "name=${{ github.ref_name }} ($(TZ=Africa/Lusaka date --iso))" >> $GITHUB_OUTPUT
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ steps.meta.outputs.name }}
+          body_path: LATEST_RELEASE_NOTES.md
+          files: artifacts/*
