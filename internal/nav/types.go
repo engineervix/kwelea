@@ -12,11 +12,12 @@ import (
 // Site is the root context passed to every template render. It is built once
 // per build and then treated as read-only.
 type Site struct {
-	Title    string
-	Version  string
-	BaseURL  string
-	Repo     string
-	BuildCfg config.BuildConfig
+	Title        string
+	Version      string
+	BaseURL      string
+	Repo         string
+	RepoPlatform string // "github", "gitlab", or "" for unknown/not set
+	BuildCfg     config.BuildConfig
 	ServeCfg config.ServeConfig
 	ThemeCfg config.ThemeConfig
 	Nav      []NavSection // full nav tree, built by this package

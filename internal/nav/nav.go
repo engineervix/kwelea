@@ -196,14 +196,27 @@ func NewSite(cfg *config.Config) (*Site, error) {
 	LinkPrevNext(flat)
 
 	return &Site{
-		Title:    cfg.Site.Title,
-		Version:  cfg.Site.Version,
-		BaseURL:  cfg.Site.BaseURL,
-		Repo:     cfg.Site.Repo,
-		BuildCfg: cfg.Build,
-		ServeCfg: cfg.Serve,
-		ThemeCfg: cfg.Theme,
-		Nav:      sections,
-		Pages:    flat,
+		Title:        cfg.Site.Title,
+		Version:      cfg.Site.Version,
+		BaseURL:      cfg.Site.BaseURL,
+		Repo:         cfg.Site.Repo,
+		RepoPlatform: repoplatform(cfg.Site.Repo),
+		BuildCfg:     cfg.Build,
+		ServeCfg:     cfg.Serve,
+		ThemeCfg:     cfg.Theme,
+		Nav:          sections,
+		Pages:        flat,
 	}, nil
+}
+
+// repoplatform returns "github", "gitlab", or "" for the given repo URL.
+func repoplatform(repo string) string {
+	switch {
+	case strings.Contains(repo, "github.com"):
+		return "github"
+	case strings.Contains(repo, "gitlab.com"):
+		return "gitlab"
+	default:
+		return ""
+	}
 }
