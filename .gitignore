@@ -1,0 +1,15 @@
+# Binary output
+kwelea
+
+# Generated site output
+/site/
+
+# Go test artifacts
+*.test
+coverage.out
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo

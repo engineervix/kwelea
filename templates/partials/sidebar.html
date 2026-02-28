@@ -1,0 +1,15 @@
+{{/* partials/sidebar.html — Phase 4: replace with full sidebar from _dev/docs-ui.html */}}
+{{define "sidebar"}}
+<nav class="sidebar">
+  {{range .Site.Nav}}
+  <section>
+    <h3>{{.Label}}</h3>
+    <ul>
+      {{range .Items}}
+      <li><a href="{{.Path}}"{{if .Active}} class="active"{{end}}>{{.Title}}</a></li>
+      {{end}}
+    </ul>
+  </section>
+  {{end}}
+</nav>
+{{end}}

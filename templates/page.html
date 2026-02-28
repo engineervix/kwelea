@@ -1,0 +1,11 @@
+{{/* page.html — Phase 4: replace with full three-column layout from _dev/docs-ui.html */}}
+{{define "page"}}
+<div class="layout">
+  {{template "sidebar" .}}
+  <main class="content">
+    <article>{{.Page.HTML}}</article>
+    {{template "pager" .}}
+  </main>
+  {{template "toc" .}}
+</div>
+{{end}}

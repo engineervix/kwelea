@@ -1,0 +1,13 @@
+{{/* partials/toc.html — Phase 4: replace with full ToC from _dev/docs-ui.html */}}
+{{define "toc"}}
+{{if .Page.TOC}}
+<aside class="toc">
+  <h4>On this page</h4>
+  <ul>
+    {{range .Page.TOC}}
+    <li class="toc-h{{.Level}}"><a href="#{{.ID}}">{{.Text}}</a></li>
+    {{end}}
+  </ul>
+</aside>
+{{end}}
+{{end}}

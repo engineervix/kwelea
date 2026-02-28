@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+{{/* layout.html — Phase 4: replace with full design from _dev/docs-ui.html */}}
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{if .Page.Title}}{{.Page.Title}} — {{end}}{{.Site.Title}}</title>
+  <link rel="stylesheet" href="/assets/theme.css">
+</head>
+<body>
+  {{template "page" .}}
+  <script src="/assets/vendor/flexsearch.bundle.js"></script>
+  <script src="/assets/main.js"></script>
+</body>
+</html>
