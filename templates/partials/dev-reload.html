@@ -1,10 +1,23 @@
-{{/* partials/dev-reload.html — injected ONLY during `kwelea serve`, never in `kwelea build`.
-     Phase 6: replace with full WebSocket reconnect script. */}}
+{{/* partials/dev-reload.html — injected ONLY during `kwelea serve`, never in `kwelea build`. */}}
 {{define "dev-reload"}}
 <script>
 (function() {
-  // Placeholder: Phase 6 will implement full WebSocket live-reload with auto-reconnect.
-  console.log('[kwelea] dev server connected — live reload pending Phase 6');
+  var wsPath = '/_kwelea/ws';
+  var ws;
+  function connect() {
+    ws = new WebSocket('ws://' + location.host + wsPath);
+    ws.onmessage = function(e) {
+      if (e.data === 'reload') location.reload();
+    };
+    ws.onclose = function() {
+      // Server went away (rebuild in progress). Retry in 1 s.
+      setTimeout(connect, 1000);
+    };
+    ws.onerror = function() {
+      ws.close();
+    };
+  }
+  connect();
 })();
 </script>
 {{end}}

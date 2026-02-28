@@ -1,11 +1,10 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 
 	"github.com/engineervix/kwelea/internal/config"
+	"github.com/engineervix/kwelea/internal/server"
 )
 
 var serveCmd = &cobra.Command{
@@ -20,8 +19,5 @@ func runServe(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-
-	fmt.Printf("→ starting dev server on http://localhost:%d\n", cfg.Serve.Port)
-	fmt.Println("  (dev server not yet implemented — Phase 6)")
-	return nil
+	return server.Start(cfg, assets, cfgFile)
 }
