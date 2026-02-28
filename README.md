@@ -1,8 +1,8 @@
 # Kwelea
 
-A documentation generator for Go projects. Write Markdown in `docs/`, run one command, get a beautiful static site.
+Kwelea is a static site generator for project documentation. Write Markdown in `docs/`, run one command, get a beautiful static site.
 
-Install it once globally — consuming projects gain zero new dependencies.
+Distributed as a single Go binary — install it once globally, use it across all your projects. No Node.js, no Python, no CDN calls, no runtime dependencies in the projects you document.
 
 ```bash
 go install github.com/engineervix/kwelea@latest
