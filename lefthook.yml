@@ -1,0 +1,18 @@
+# Lefthook configuration for tbx
+# https://github.com/evilmartians/lefthook
+
+pre-commit:
+  parallel: true
+  jobs:
+    - name: format
+      glob: "*.go"
+      run: just fmt
+      stage_fixed: true
+
+    - name: check
+      glob: "*.go"
+      run: just vet
+
+    - name: test
+      glob: "*.go"
+      run: just test
