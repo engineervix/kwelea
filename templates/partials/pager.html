@@ -1,11 +1,26 @@
-{{/* partials/pager.html — Phase 4: replace with full pager cards from _dev/docs-ui.html */}}
 {{define "pager"}}
 <nav class="pager">
   {{if .Page.Prev}}
-  <a class="pager-prev" href="{{.Page.Prev.Path}}">← {{.Page.Prev.Title}}</a>
+  <a href="{{.Page.Prev.Path}}" class="pager-card prev">
+    <span class="pager-dir">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Previous
+    </span>
+    <span class="pager-title">{{.Page.Prev.Title}}</span>
+  </a>
+  {{else}}
+  <div></div>
   {{end}}
   {{if .Page.Next}}
-  <a class="pager-next" href="{{.Page.Next.Path}}">{{.Page.Next.Title}} →</a>
+  <a href="{{.Page.Next.Path}}" class="pager-card next">
+    <span class="pager-dir">
+      Next
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </span>
+    <span class="pager-title">{{.Page.Next.Title}}</span>
+  </a>
+  {{else}}
+  <div></div>
   {{end}}
 </nav>
 {{end}}

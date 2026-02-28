@@ -1,11 +1,34 @@
-{{/* page.html — Phase 4: replace with full three-column layout from _dev/docs-ui.html */}}
 {{define "page"}}
+<!-- Mobile sidebar backdrop -->
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
 <div class="layout">
+
   {{template "sidebar" .}}
-  <main class="content">
-    <article>{{.Page.HTML}}</article>
+
+  <!-- Main content -->
+  <main class="main">
+    <div class="content-header">
+      <div class="content-breadcrumb">
+        <a href="/">Docs</a>
+        {{if .SectionLabel}}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        {{.SectionLabel}}
+        {{end}}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        {{.Page.Title}}
+      </div>
+      <h1 class="content-title">{{.Page.Title}}</h1>
+    </div>
+
+    <div class="prose">
+      {{.Page.HTML}}
+    </div>
+
     {{template "pager" .}}
   </main>
+
   {{template "toc" .}}
+
 </div>
 {{end}}
