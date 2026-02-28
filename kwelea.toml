@@ -1,10 +1,9 @@
-# kwelea.toml — development configuration for the kwelea project itself
-# (dogfooded in Phase 7; this file also validates the config loader during Phase 1)
+# kwelea.toml — configuration for kwelea's own documentation site
 
 [site]
 title    = "kwelea"
 version  = "v0.1.0"
-base_url = "https://github.com/engineervix/kwelea"
+base_url = "https://engineervix.github.io/kwelea"
 repo     = "https://github.com/engineervix/kwelea"
 
 [build]
@@ -18,3 +17,17 @@ open_browser = true
 [theme]
 light_code_theme = "github"
 dark_code_theme  = "github-dark"
+
+[[nav]]
+section = "Introduction"
+pages   = ["index.md", "01-getting-started.md", "02-installation.md"]
+
+[[nav]]
+section = "Guide"
+pages   = [
+  "guide/index.md",
+  "guide/01-configuration.md",
+  "guide/02-navigation.md",
+  "guide/03-markdown.md",
+  "guide/04-deployment.md",
+]
