@@ -86,6 +86,10 @@ jobs:
 
 The [Quelea](https://en.wikipedia.org/wiki/Quelea) — a genus of small weaver birds. Kwelea *weaves* Markdown, templates, and assets into documentation sites.
 
+## Credits
+
+- Logo icon: [Doc Docx Files SVG](https://www.svgrepo.com/svg/415211/doc-docx-files) from SVG Repo (CC0)
+
 ## Licence
 
 MIT — see [LICENSE](LICENSE).
