@@ -6,6 +6,7 @@ import (
 	"html/template"
 
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
+	goldmarkast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
@@ -18,17 +19,29 @@ import (
 )
 
 // Parse processes a Markdown source file and returns the rendered HTML body,
-// a table of contents extracted from h2/h3 headings, and any error.
+// a table of contents extracted from h2/h3 headings, the plain text of the
+// first H1 heading (empty string if absent), and any error.
+//
+// The first H1 heading is stripped from the AST before rendering so that it
+// does not appear in the HTML body — the page template renders the title from
+// Page.Title, avoiding a duplicate. The extracted text is returned so the
+// builder can use it as a Page.Title fallback when frontmatter provides no title.
 //
 // filePath is used for error messages only. themeCfg selects the Chroma style
 // names written into CSS classes (see ChromaCSS for the matching stylesheet).
-func Parse(filePath string, src []byte, themeCfg config.ThemeConfig) (template.HTML, []nav.TocItem, error) {
+func Parse(filePath string, src []byte, themeCfg config.ThemeConfig) (template.HTML, []nav.TocItem, string, error) {
 	// Strip YAML frontmatter so goldmark does not misparse "---" as a setext rule.
 	body := stripFrontmatter(src)
 
 	md := newMarkdown(themeCfg)
 	reader := text.NewReader(body)
 	doc := md.Parser().Parse(reader)
+
+	// Strip the first H1 before ToC extraction and rendering. The page
+	// template already renders an <h1> from Page.Title; a second one in the
+	// body would be a duplicate. We return the text so callers can use it as
+	// a title source when frontmatter does not provide one.
+	h1Title := extractAndStripH1(doc, body)
 
 	// ToC must be extracted between Parse and Render because AutoHeadingID
 	// sets id attributes on the AST nodes; they are accessible here but are
@@ -37,10 +50,26 @@ func Parse(filePath string, src []byte, themeCfg config.ThemeConfig) (template.H
 
 	var buf bytes.Buffer
 	if err := md.Renderer().Render(&buf, body, doc); err != nil {
-		return "", nil, fmt.Errorf("rendering %s: %w", filePath, err)
+		return "", nil, "", fmt.Errorf("rendering %s: %w", filePath, err)
 	}
 
-	return template.HTML(buf.String()), toc, nil
+	return template.HTML(buf.String()), toc, h1Title, nil
+}
+
+// extractAndStripH1 finds the first top-level H1 heading in the AST, removes
+// it from the document (so it is not rendered), and returns its plain-text
+// content. Returns "" if no H1 is present.
+func extractAndStripH1(doc goldmarkast.Node, src []byte) string {
+	for child := doc.FirstChild(); child != nil; child = child.NextSibling() {
+		h, ok := child.(*goldmarkast.Heading)
+		if !ok || h.Level != 1 {
+			continue
+		}
+		text := headingPlainText(h, src)
+		doc.RemoveChild(doc, h)
+		return text
+	}
+	return ""
 }
 
 // newMarkdown returns a goldmark.Markdown configured with all kwelea extensions:

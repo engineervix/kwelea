@@ -59,12 +59,18 @@ func Build(site *nav.Site, embFS fs.FS, devMode bool) error {
 		if err != nil {
 			return fmt.Errorf("reading %s: %w", page.FilePath, err)
 		}
-		html, toc, err := parser.Parse(page.FilePath, src, site.ThemeCfg)
+		html, toc, h1Title, err := parser.Parse(page.FilePath, src, site.ThemeCfg)
 		if err != nil {
 			return fmt.Errorf("parsing %s: %w", page.FilePath, err)
 		}
 		page.HTML = html
 		page.TOC = toc
+		// Use the H1 as the page title when frontmatter provided none.
+		// This lets authors write natural Markdown without repeating the title
+		// in frontmatter; the H1 is always stripped from the body regardless.
+		if h1Title != "" && !page.TitleFromFrontmatter {
+			page.Title = h1Title
+		}
 	}
 
 	// Pass 2: render every page with the full template.

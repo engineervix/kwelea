@@ -49,10 +49,11 @@ func WalkDocs(docsDir string) ([]*Page, error) {
 		}
 
 		pages = append(pages, &Page{
-			Title:       title,
-			Description: fm.Description,
-			Path:        fileToURLPath(relPath),
-			FilePath:    relPath,
+			Title:                title,
+			TitleFromFrontmatter: fm.Title != "",
+			Description:          fm.Description,
+			Path:                 fileToURLPath(relPath),
+			FilePath:             relPath,
 		})
 
 		return nil

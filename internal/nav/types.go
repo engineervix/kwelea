@@ -41,15 +41,16 @@ type NavItem struct {
 // Page holds all data needed to render a single documentation page.
 // HTML and TOC are zero until Phase 3 fills them in via the parser.
 type Page struct {
-	Title       string
-	Description string
-	Path        string        // canonical URL path, e.g. /getting-started/
-	FilePath    string        // source .md file, relative to docs_dir
-	HTML        template.HTML // filled by parser (Phase 3)
-	TOC         []TocItem     // filled by parser (Phase 3)
-	Prev        *Page
-	Next        *Page
-	Draft       bool
+	Title                string
+	TitleFromFrontmatter bool          // true when Title came from frontmatter; false when derived from filename
+	Description          string
+	Path                 string        // canonical URL path, e.g. /getting-started/
+	FilePath             string        // source .md file, relative to docs_dir
+	HTML                 template.HTML // filled by parser (Phase 3)
+	TOC                  []TocItem     // filled by parser (Phase 3)
+	Prev                 *Page
+	Next                 *Page
+	Draft                bool
 }
 
 // TocItem is a heading entry in the in-page table of contents.
