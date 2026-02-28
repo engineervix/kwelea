@@ -4,16 +4,26 @@
   {{if .Page.TOC}}
   <ul class="toc-list">
     {{range .Page.TOC}}
-    <li><a href="#{{.ID}}" class="toc-link{{if eq .Level 3}} h3{{end}}">{{.Text}}</a></li>
+    <li>
+      <a href="#{{.ID}}" class="toc-link{{if eq .Level 3}} h3{{end}}"
+        >{{.Text}}</a
+      >
+    </li>
     {{end}}
   </ul>
-  {{end}}
-  {{if .Site.Repo}}
-  <hr class="toc-divider">
-  <a href="{{.Site.Repo}}" class="toc-edit" target="_blank" rel="noopener">
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
-      <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+  {{end}} {{if .SourceURL}}
+  <hr class="toc-divider" />
+  <a href="{{.SourceURL}}" class="toc-edit" target="_blank" rel="noopener">
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+      <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
     </svg>
     View source
   </a>

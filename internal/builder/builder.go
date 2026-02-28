@@ -18,6 +18,7 @@ type PageData struct {
 	Page         *nav.Page
 	SectionLabel string // nav section containing this page (empty for root pages)
 	DevMode      bool   // true only during `kwelea serve`
+	SourceURL    string // URL path to the co-located raw Markdown source file
 }
 
 // Build runs the full Phase 4 pipeline:
@@ -73,10 +74,13 @@ func Build(site *nav.Site, embFS fs.FS, devMode bool) error {
 		}
 	}
 
-	// Pass 2: render every page with the full template.
+	// Pass 2: render every page to HTML and copy raw .md source alongside it.
 	for _, page := range site.Pages {
 		if err := renderPage(tmpl, site, page, outputDir, devMode); err != nil {
 			return fmt.Errorf("rendering %s: %w", page.Path, err)
+		}
+		if err := writeMDSource(page, docsDir, outputDir); err != nil {
+			return fmt.Errorf("writing md source for %s: %w", page.Path, err)
 		}
 	}
 
@@ -124,6 +128,7 @@ func renderPage(tmpl *template.Template, site *nav.Site, page *nav.Page, outputD
 		Page:         page,
 		SectionLabel: sectionFor(site, page.Path),
 		DevMode:      devMode,
+		SourceURL:    sourceURL(site, page),
 	}
 	return tmpl.ExecuteTemplate(f, "layout.html", data)
 }
@@ -136,6 +141,32 @@ func pageOutputPath(outputDir, urlPath string) string {
 		return filepath.Join(outputDir, "index.html")
 	}
 	return filepath.Join(outputDir, filepath.FromSlash(clean), "index.html")
+}
+
+// mdOutputPath maps a URL path to the co-located raw Markdown file path.
+// e.g. "/getting-started/" → "site/getting-started/source.md"
+func mdOutputPath(outputDir, urlPath string) string {
+	clean := strings.Trim(urlPath, "/")
+	if clean == "" {
+		return filepath.Join(outputDir, "source.md")
+	}
+	return filepath.Join(outputDir, filepath.FromSlash(clean), "source.md")
+}
+
+// writeMDSource copies the raw Markdown source file into the output directory
+// alongside the rendered index.html, as "source.md".
+func writeMDSource(page *nav.Page, docsDir, outputDir string) error {
+	src, err := os.ReadFile(filepath.Join(docsDir, page.FilePath))
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(mdOutputPath(outputDir, page.Path), src, 0o644)
+}
+
+// sourceURL returns the URL path to the co-located raw Markdown source file.
+// e.g. page.Path "/getting-started/" → "/getting-started/source.md"
+func sourceURL(_ *nav.Site, page *nav.Page) string {
+	return page.Path + "source.md"
 }
 
 // sectionFor returns the NavSection label for the given URL path, or "" if the
