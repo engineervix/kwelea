@@ -65,15 +65,15 @@ check: fmt vet
 
 # Build the kwelea docs with kwelea itself (dogfood)
 docs: build
-    ./kwelea build
+    {{ build_dir }}/{{ binary_name }} build
 
 # Serve the kwelea docs locally (dogfood)
 serve: build
-    ./kwelea serve
+    {{ build_dir }}/{{ binary_name }} serve
 
 # Remove build artifacts
 clean:
-    rm -f kwelea
+    rm -rf {{ build_dir }}/
     rm -rf site/
 
 # Download/refresh self-hosted font files into assets/fonts/

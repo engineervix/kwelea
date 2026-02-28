@@ -1,6 +1,3 @@
-// Package nav implements the filesystem walker, nav tree builder, and core
-// data types for kwelea. Every downstream package (parser, builder, server)
-// threads through the types defined here.
 package nav
 
 import (

@@ -32,8 +32,11 @@ func NewAdmonitionNode(admonType, title string) *AdmonitionNode {
 	return n
 }
 
+// Kind returns KindAdmonition, satisfying the goldmark ast.Node interface.
 func (n *AdmonitionNode) Kind() goldmarkast.NodeKind { return KindAdmonition }
 
+// Dump writes a debug representation of the node to standard output, satisfying
+// the goldmark ast.Node interface.
 func (n *AdmonitionNode) Dump(source []byte, level int) {
 	goldmarkast.DumpHelper(n, source, level, map[string]string{
 		"Type":  n.AdmonitionType,

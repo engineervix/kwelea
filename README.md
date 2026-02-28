@@ -1,8 +1,20 @@
-# Kwelea
+<h1 align="center">Kwelea</h1>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/engineervix/kwelea/refs/heads/assets/kwelea.png" alt="Kwelea" width="200" />
+  <br/>
+  <em>Named after the <a href="https://en.wikipedia.org/wiki/Quelea">Quelea</a> — a genus of small weaver birds. Kwelea <strong>weaves</strong> Markdown, templates, and assets into documentation sites.</em>
+</p>
+
+<p align="center">
+  <img alt="GitHub go.mod Go version" src="https://img.shields.io/github/go-mod/go-version/engineervix/kwelea" />
+  <a href="https://github.com/engineervix/kwelea/actions/workflows/ci.yml"><img alt="CI/CD" src="https://github.com/engineervix/kwelea/actions/workflows/ci.yml/badge.svg" /></a>
+  <img alt="GitHub License" src="https://img.shields.io/github/license/engineervix/kwelea" />
+</p>
 
 Kwelea is a static site generator for project documentation. Write Markdown in `docs/`, run one command, get a beautiful static site.
 
-Distributed as a single binary — install it once globally, use it across all your projects. No Node.js, no Python, no CDN calls, no runtime dependencies in the projects you document.
+Distributed as a single binary -- install it once globally, use it across all your projects. No Node.js, no Python, no CDN calls, no runtime dependencies in the projects you document.
 
 ```bash
 # With Go:
@@ -13,6 +25,18 @@ go install github.com/engineervix/kwelea@latest
 
 kwelea --version
 ```
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Quickstart](#quickstart)
+- [Features](#features)
+- [Configuration](#configuration)
+- [Publishing to GitHub Pages](#publishing-to-github-pages)
+- [Credits](#credits)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Quickstart
 
@@ -88,14 +112,6 @@ jobs:
       - uses: actions/deploy-pages@v4
 ```
 
-## Named after
-
-The [Quelea](https://en.wikipedia.org/wiki/Quelea) -- a genus of small weaver birds. Kwelea *weaves* Markdown, templates, and assets into documentation sites.
-
 ## Credits
 
-- Logo icon: [Doc Docx Files SVG Vector](https://www.svgrepo.com/svg/415211/doc-docx-files) from SVG Repo (CC0)
-
-## Licence
-
-MIT — see [LICENSE](LICENSE).
+- Navbar logo icon: [Doc Docx Files SVG Vector](https://www.svgrepo.com/svg/415211/doc-docx-files) from SVG Repo (CC0)

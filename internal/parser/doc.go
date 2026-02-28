@@ -1,11 +1,21 @@
 // Package parser implements the Markdown processing pipeline for kwelea.
 //
-// Phase 3 work: goldmark pipeline, frontmatter extraction, ToC walker,
-// admonitions extension (:::), and D2 diagram extension (```d2 fences).
+// The two exported entry points are:
 //
-// Dependencies (added in Phase 3):
-//   - github.com/yuin/goldmark
-//   - github.com/yuin/goldmark-highlighting/v2
-//   - github.com/alecthomas/chroma/v2
-//   - oss.terrastruct.com/d2
+//   - [Parse] converts a Markdown source file into rendered HTML, an in-page
+//     table-of-contents, and the plain-text H1 title (if present). It runs the
+//     full goldmark pipeline including syntax highlighting, admonitions, and D2
+//     diagram rendering.
+//
+//   - [ChromaCSS] generates a combined Chroma stylesheet containing both a
+//     light-mode and a dark-mode rule set, written once per build to
+//     assets/chroma.css in the output directory.
+//
+// Markdown extensions provided by this package:
+//
+//   - Admonitions: ::: info / ::: tip / ::: warning / ::: danger / ::: details
+//     blocks rendered as styled <div> or <details> elements.
+//
+//   - D2 diagrams: fenced code blocks with language "d2" are compiled to
+//     inline SVG pairs (light + dark) using the D2 Go library.
 package parser

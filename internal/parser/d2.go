@@ -33,8 +33,11 @@ type D2Node struct {
 	SVG []byte // rendered HTML: <div class="d2-diagram"><div class="d2-light">…</div><div class="d2-dark">…</div></div>
 }
 
+// Kind returns KindD2, satisfying the goldmark ast.Node interface.
 func (n *D2Node) Kind() goldmarkast.NodeKind { return KindD2 }
 
+// Dump writes a debug representation of the node to standard output, satisfying
+// the goldmark ast.Node interface.
 func (n *D2Node) Dump(source []byte, level int) {
 	goldmarkast.DumpHelper(n, source, level, map[string]string{"SVG": "(omitted)"}, nil)
 }
