@@ -51,7 +51,7 @@
   --border-soft: #e8e5df;
   --text:        #1a1916;
   --text-2:      #5a5750;
-  --text-3:      #8a8780;
+  --text-3:      #696460;
   --accent:      #2563a8;
   --accent-dim:  #dbeafe;
   --accent-2:    #b45309;
@@ -76,7 +76,7 @@
   --border-soft: #252422;
   --text:        #e8e5df;
   --text-2:      #9a9790;
-  --text-3:      #5a5750;
+  --text-3:      #8a8780;
   --accent:      #60a5fa;
   --accent-dim:  #1e3a5f;
   --accent-2:    #fbbf24;
@@ -253,7 +253,6 @@ body {
 .nav-item.active {
   color: var(--nav-active);
   border-left-color: var(--nav-active);
-  background: var(--accent-dim);
   font-weight: 500;
 }
 
@@ -547,7 +546,6 @@ details.admonition[open] > summary { margin-bottom: .5rem; }
 .toc-link.active {
   color: var(--accent);
   border-left-color: var(--accent);
-  background: var(--accent-dim);
 }
 
 .toc-link.h3 { padding-left: 1.25rem; font-size: .725rem; }
