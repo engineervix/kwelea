@@ -23,6 +23,7 @@ go install github.com/engineervix/kwelea@latest
 
 # Without Go — download the binary for your platform:
 # https://github.com/engineervix/kwelea/releases/latest
+# (macOS: see installation docs for a required Gatekeeper step)
 
 kwelea --version
 ```

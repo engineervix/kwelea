@@ -37,11 +37,20 @@ curl -fsSL https://github.com/engineervix/kwelea/releases/latest/download/kwelea
   -o /usr/local/bin/kwelea && chmod +x /usr/local/bin/kwelea
 ```
 
-::: tip macOS: clear the quarantine flag
-macOS blocks downloaded binaries that aren't notarized. After installing, run:
+::: tip macOS: Gatekeeper warning
+After downloading, macOS may show:
+
+> _"Apple could not verify 'kwelea' is free of malware that may harm your Mac or compromise your privacy."_
+
+This happens because the binary is not yet notarized with Apple. To clear it, run:
+
 ```bash
 xattr -d com.apple.quarantine /usr/local/bin/kwelea
 ```
+
+Or right-click the binary in Finder → **Open** → **Open** to allow it once.
+
+If you have Go installed, `go install` compiles from source on your machine and bypasses Gatekeeper entirely.
 :::
 
 **Windows**
