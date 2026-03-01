@@ -94,7 +94,7 @@ kwelea serve
 
 // inferProjectName reads the module path from go.mod and returns the last
 // path segment as a human-readable project name. Falls back to the directory
-// name if go.mod is absent or unparseable.
+// name if go.mod is absent or unparsable.
 func inferProjectName(dir string) string {
 	data, err := os.ReadFile(filepath.Join(dir, "go.mod"))
 	if err != nil {
