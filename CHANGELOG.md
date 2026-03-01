@@ -2,13 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
-## 0.1.1 (2026-03-01)
+## [0.1.2](https://github.com/engineervix/kwelea/compare/v0.1.1...v0.1.2) (2026-03-01)
 
+
+### 🐛 Bug Fixes
+
+* build kwelea from source in CI; zero BasePath in dev server ([a5cb28f](https://github.com/engineervix/kwelea/commit/a5cb28fee532a7bc91410e2e90a69339dba78902))
+
+## [0.1.1](https://github.com/engineervix/kwelea/compare/v0.1.0...v0.1.1) (2026-03-01)
+
+
+### 🐛 Bug Fixes
 
 * prefix all asset and page links with base path ([cef6898](https://github.com/engineervix/kwelea/commit/cef689816ab24a8537a80da3021fbe7410ed9243))
 
 
-## 0.1.0 (2026-02-28)
+## [0.1.0](https://github.com/engineervix/kwelea/releases/tag/v0.1.0) (2026-02-28)
 
 
 ### 🚀 Features
