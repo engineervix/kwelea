@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.4](https://github.com/engineervix/kwelea/compare/v0.1.3...v0.1.4) (2026-03-01)
+
+
+### 🚀 Features
+
+* add site footer with extra_head/extra_footer injection hooks ([213c7c1](https://github.com/engineervix/kwelea/commit/213c7c12038644f014ff5050aa54b9e14e61b614)), closes [#10](https://github.com/engineervix/kwelea/issues/10)
+
+
+### 🐛 Bug Fixes
+
+* correct relative link to Installation page in Getting Started ([63962f6](https://github.com/engineervix/kwelea/commit/63962f6ab4434d8df9be7172918d3446fdaeaa9b))
+
 ## [0.1.3](https://github.com/engineervix/kwelea/compare/v0.1.2...v0.1.3) (2026-03-01)
 
 
