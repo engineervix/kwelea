@@ -41,7 +41,7 @@ kwelea --version
 ## Quickstart
 
 ```bash
-# In your Go project root:
+# In your project root:
 kwelea init    # create docs/ and kwelea.toml
 kwelea serve   # dev server at http://localhost:4000
 kwelea build   # build the static site to site/
