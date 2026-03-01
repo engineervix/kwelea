@@ -47,6 +47,7 @@ const modalInput = document.getElementById('searchModalInput');
 const searchResultsEl = document.getElementById('searchResults');
 
 // FlexSearch index — loaded once on first modal open.
+const __basePath = (window.__kwelea && window.__kwelea.basePath) || '';
 let searchIndex = null;
 let indexLoading = false;
 
@@ -54,7 +55,7 @@ async function loadSearchIndex() {
   if (searchIndex !== null || indexLoading) return;
   indexLoading = true;
   try {
-    const res = await fetch('/search-index.json');
+    const res = await fetch(__basePath + '/search-index.json');
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const entries = await res.json();
 
@@ -168,7 +169,7 @@ function renderResults(query) {
   }
 
   searchResultsEl.innerHTML = docs.map(doc => `
-    <a href="${escapeHTML(doc.path)}" class="search-result" onclick="closeSearch()">
+    <a href="${escapeHTML(__basePath + doc.path)}" class="search-result" onclick="closeSearch()">
       <div class="search-result-title">${escapeHTML(doc.title)}</div>
       <div class="search-result-path">${escapeHTML(doc.path)}</div>
       <div class="search-result-snippet">${makeSnippet(doc.body, query)}</div>

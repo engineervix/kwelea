@@ -1,7 +1,7 @@
 {{define "pager"}}
 <nav class="pager">
   {{if .Page.Prev}}
-  <a href="{{.Page.Prev.Path}}" class="pager-card prev">
+  <a href="{{.Site.BasePath}}{{.Page.Prev.Path}}" class="pager-card prev">
     <span class="pager-dir">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
       Previous
@@ -12,7 +12,7 @@
   <div></div>
   {{end}}
   {{if .Page.Next}}
-  <a href="{{.Page.Next.Path}}" class="pager-card next">
+  <a href="{{.Site.BasePath}}{{.Page.Next.Path}}" class="pager-card next">
     <span class="pager-dir">
       Next
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>

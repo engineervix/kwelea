@@ -12,6 +12,7 @@ type Site struct {
 	Title        string
 	Version      string
 	BaseURL      string
+	BasePath     string // URL path prefix derived from BaseURL, e.g. "/kwelea" or ""
 	Repo         string
 	RepoPlatform string // "github", "gitlab", or "" for unknown/not set
 	BuildCfg     config.BuildConfig

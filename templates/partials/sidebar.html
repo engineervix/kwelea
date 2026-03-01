@@ -4,7 +4,7 @@
   <div class="nav-section">
     {{if .Label}}<div class="nav-section-label">{{.Label}}</div>{{end}}
     {{range .Items}}
-    <a href="{{.Path}}" class="nav-item{{if eq .Path $.Page.Path}} active{{end}}">{{.Title}}</a>
+    <a href="{{$.Site.BasePath}}{{.Path}}" class="nav-item{{if eq .Path $.Page.Path}} active{{end}}">{{.Title}}</a>
     {{end}}
   </div>
   {{end}}

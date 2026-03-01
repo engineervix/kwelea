@@ -2,6 +2,7 @@ package nav
 
 import (
 	"fmt"
+	"net/url"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -195,10 +196,18 @@ func NewSite(cfg *config.Config) (*Site, error) {
 	flat := FlattenNav(sections, pages)
 	LinkPrevNext(flat)
 
+	basePath := ""
+	if rawURL := cfg.Site.BaseURL; rawURL != "" {
+		if u, err := url.Parse(rawURL); err == nil {
+			basePath = strings.TrimRight(u.Path, "/")
+		}
+	}
+
 	return &Site{
 		Title:        cfg.Site.Title,
 		Version:      cfg.Site.Version,
 		BaseURL:      cfg.Site.BaseURL,
+		BasePath:     basePath,
 		Repo:         cfg.Site.Repo,
 		RepoPlatform: repoplatform(cfg.Site.Repo),
 		BuildCfg:     cfg.Build,

@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{if .Page.Title}}{{.Page.Title}} — {{end}}{{.Site.Title}}</title>
-<link rel="stylesheet" href="/assets/theme.css">
-<link rel="stylesheet" href="/assets/chroma.css">
-<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
-<link rel="manifest" href="/assets/favicon/site.webmanifest">
-<link rel="shortcut icon" href="/assets/favicon/favicon.ico">
+<link rel="stylesheet" href="{{.Site.BasePath}}/assets/theme.css">
+<link rel="stylesheet" href="{{.Site.BasePath}}/assets/chroma.css">
+<link rel="apple-touch-icon" sizes="180x180" href="{{.Site.BasePath}}/assets/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="{{.Site.BasePath}}/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="{{.Site.BasePath}}/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="{{.Site.BasePath}}/assets/favicon/site.webmanifest">
+<link rel="shortcut icon" href="{{.Site.BasePath}}/assets/favicon/favicon.ico">
 </head>
 <body>
 
@@ -22,8 +22,8 @@
     </svg>
   </button>
 
-  <a href="/" class="header-logo">
-    <img src="/assets/docs.svg" alt="" width="28" height="28">
+  <a href="{{.Site.BasePath}}/" class="header-logo">
+    <img src="{{.Site.BasePath}}/assets/docs.svg" alt="" width="28" height="28">
     {{.Site.Title}}
   </a>
   {{if .Site.Version}}<span class="header-version">{{.Site.Version}}</span>{{end}}
@@ -92,8 +92,9 @@
   </div>
 </div>
 
-<script src="/assets/vendor/flexsearch.bundle.js"></script>
-<script src="/assets/main.js"></script>
+<script>window.__kwelea={basePath:"{{.Site.BasePath}}"};</script>
+<script src="{{.Site.BasePath}}/assets/vendor/flexsearch.bundle.js"></script>
+<script src="{{.Site.BasePath}}/assets/main.js"></script>
 {{if .DevMode}}{{template "dev-reload" .}}{{end}}
 </body>
 </html>
