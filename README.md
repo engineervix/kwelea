@@ -10,6 +10,7 @@
   <img alt="GitHub go.mod Go version" src="https://img.shields.io/github/go-mod/go-version/engineervix/kwelea" />
   <a href="https://github.com/engineervix/kwelea/actions/workflows/ci.yml"><img alt="CI/CD" src="https://github.com/engineervix/kwelea/actions/workflows/ci.yml/badge.svg" /></a>
   <img alt="GitHub License" src="https://img.shields.io/github/license/engineervix/kwelea" />
+  <img alt="GitHub commits since latest release" src="https://img.shields.io/github/commits-since/engineervix/kwelea/latest">
 </p>
 
 Kwelea is a static site generator for project documentation. Write Markdown in `docs/`, run one command, get a beautiful static site.
