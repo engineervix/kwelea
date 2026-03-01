@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.5](https://github.com/engineervix/kwelea/compare/v0.1.4...v0.1.5) (2026-03-01)
+
+
+### 🚀 Features
+
+* add --base-url flag to kwelea build ([c701b4c](https://github.com/engineervix/kwelea/commit/c701b4c9e1856c530ec1673437caa3a56a26412c))
+
+
+### 🐛 Bug Fixes
+
+* ensure correct version is passed to the docs when we release ([6177b74](https://github.com/engineervix/kwelea/commit/6177b74dff4c12a1ed13926094472cd25ed85fec))
+
+
+### 📝 Docs
+
+* add contribution guide ([2c87ddc](https://github.com/engineervix/kwelea/commit/2c87ddc61fdc8175fc719fba93f16b92298e11b2))
+* **readme:** show commits since last release ([9d43a34](https://github.com/engineervix/kwelea/commit/9d43a34b8c037b8461830ce1cb583c4e42521a6d))
+
+
+### 👷 CI/CD
+
+* add renovate config ([eb32e3d](https://github.com/engineervix/kwelea/commit/eb32e3de196fd81c36125027c35c9a54f4ba4bcc))
+
 ## [0.1.4](https://github.com/engineervix/kwelea/compare/v0.1.3...v0.1.4) (2026-03-01)
 
 
