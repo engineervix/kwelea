@@ -10,6 +10,8 @@ import (
 	"github.com/engineervix/kwelea/internal/nav"
 )
 
+var buildBaseURL string
+
 var buildCmd = &cobra.Command{
 	Use:   "build",
 	Short: "Build the documentation site",
@@ -17,10 +19,18 @@ var buildCmd = &cobra.Command{
 	RunE:  runBuild,
 }
 
+func init() {
+	buildCmd.Flags().StringVar(&buildBaseURL, "base-url", "", "override base_url from kwelea.toml (e.g. https://kwelea.pages.dev)")
+}
+
 func runBuild(cmd *cobra.Command, args []string) error {
 	cfg, err := config.Load(cfgFile)
 	if err != nil {
 		return err
+	}
+
+	if buildBaseURL != "" {
+		cfg.Site.BaseURL = buildBaseURL
 	}
 
 	site, err := nav.NewSite(cfg)

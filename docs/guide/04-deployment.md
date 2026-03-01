@@ -77,7 +77,20 @@ Update `kwelea.toml` with your Pages URL:
 base_url = "https://yourorg.github.io/your-repo"
 ```
 
+GitHub Pages serves project sites under a subpath (`/your-repo`). kwelea extracts that path from `base_url` and uses it as the prefix for all asset and nav links. Getting this wrong produces broken CSS and JS — set it exactly.
+
 Push to `main` — the workflow builds your docs and publishes them automatically.
+
+## Cloudflare Pages
+
+Install [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/) and deploy directly:
+
+```bash
+kwelea build --base-url https://your-project.pages.dev
+wrangler pages deploy site/
+```
+
+`--base-url` overrides the `base_url` in `kwelea.toml` for this build. This is useful when the same config targets multiple hosts — for example, `kwelea.toml` points to a GitHub Pages URL but you want a clean Cloudflare build without editing the file.
 
 ## Netlify
 

@@ -48,7 +48,7 @@ pages   = ["configuration.md", "routing.md"]
 |-----|---------|-------------|
 | `title` | `""` | Site name, shown in the header and `<title>` |
 | `version` | `""` | Optional version badge shown next to the title |
-| `base_url` | `""` | Canonical URL — used in sitemap and meta tags |
+| `base_url` | `""` | Full URL of the deployed site (e.g. `https://yourorg.github.io/mylib`). The path component is used as a prefix for all asset and nav links — must match the host and subpath where the site is served |
 | `repo` | `""` | GitHub URL — renders the GitHub icon in the header |
 | `extra_head` | `""` | Verbatim HTML injected into `<head>` — custom fonts, verification tags, etc. |
 | `extra_footer` | `""` | Verbatim HTML injected into the page footer — analytics scripts, banners, etc. |
