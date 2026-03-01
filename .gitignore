@@ -18,6 +18,9 @@ coverage.out
 # dotenv
 .env
 
+# wrangler
+.wrangler/
+
 ### macOS ###
 # General
 .DS_Store
