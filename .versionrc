@@ -3,6 +3,10 @@
     {
       "filename": "VERSION",
       "type": "plain-text"
+    },
+    {
+      "filename": "kwelea.toml",
+      "updater": "kwelea-toml-updater.js"
     }
   ],
   "packageFiles": [

@@ -2,7 +2,7 @@
 
 [site]
 title    = "kwelea"
-version  = "v0.1.0"
+version  = "v0.1.4"
 base_url = "https://engineervix.github.io/kwelea"
 repo     = "https://github.com/engineervix/kwelea"
 
