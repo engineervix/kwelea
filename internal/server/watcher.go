@@ -90,6 +90,7 @@ func rebuildAndReload(cfg *config.Config, embFS fs.FS, hub *Hub) {
 		log.Printf("rebuild: nav: %v", err)
 		return
 	}
+	site.BasePath = "" // dev server always serves from /, never a subpath
 	if err := builder.Build(site, embFS, true); err != nil {
 		log.Printf("rebuild: %v", err)
 		return

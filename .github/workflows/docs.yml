@@ -25,11 +25,11 @@ jobs:
           go-version-file: go.mod
           cache: true
 
-      - name: Install kwelea
-        run: go install github.com/engineervix/kwelea@latest
+      - name: Build kwelea
+        run: go build -ldflags="-s -w" -o bin/kwelea .
 
       - name: Build docs
-        run: kwelea build
+        run: bin/kwelea build
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

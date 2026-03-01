@@ -99,6 +99,7 @@ func initialBuild(cfg *config.Config, embFS fs.FS) error {
 	if err != nil {
 		return fmt.Errorf("initial build: nav: %w", err)
 	}
+	site.BasePath = "" // dev server always serves from /, never a subpath
 	if err := builder.Build(site, embFS, true); err != nil {
 		return fmt.Errorf("initial build: %w", err)
 	}
