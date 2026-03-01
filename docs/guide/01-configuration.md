@@ -13,6 +13,12 @@ title    = "mylib"
 version  = "v1.4.2"
 base_url = "https://yourorg.github.io/mylib"
 repo     = "https://github.com/yourorg/mylib"
+extra_head = """
+<meta name="google-site-verification" content="abc123">
+"""
+extra_footer = """
+<script defer src="https://example.com/analytics.js"></script>
+"""
 
 [build]
 docs_dir   = "docs"
@@ -44,6 +50,26 @@ pages   = ["configuration.md", "routing.md"]
 | `version` | `""` | Optional version badge shown next to the title |
 | `base_url` | `""` | Canonical URL — used in sitemap and meta tags |
 | `repo` | `""` | GitHub URL — renders the GitHub icon in the header |
+| `extra_head` | `""` | Verbatim HTML injected into `<head>` — custom fonts, verification tags, etc. |
+| `extra_footer` | `""` | Verbatim HTML injected into the page footer — analytics scripts, banners, etc. |
+
+Use triple-quoted TOML strings for multi-line values:
+
+```toml
+[site]
+extra_head = """
+<meta name="google-site-verification" content="abc123">
+<link rel="preconnect" href="https://fonts.example.com">
+"""
+
+extra_footer = """
+<script defer src="https://example.com/analytics.js"></script>
+"""
+```
+
+::: warning
+`extra_head` and `extra_footer` are rendered unescaped. Only include HTML you trust.
+:::
 
 ## [build]
 

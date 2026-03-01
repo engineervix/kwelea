@@ -2,6 +2,7 @@ package nav
 
 import (
 	"fmt"
+	"html/template"
 	"net/url"
 	"path/filepath"
 	"sort"
@@ -210,6 +211,8 @@ func NewSite(cfg *config.Config) (*Site, error) {
 		BasePath:     basePath,
 		Repo:         cfg.Site.Repo,
 		RepoPlatform: repoplatform(cfg.Site.Repo),
+		ExtraHead:    template.HTML(cfg.Site.ExtraHead),
+		ExtraFooter:  template.HTML(cfg.Site.ExtraFooter),
 		BuildCfg:     cfg.Build,
 		ServeCfg:     cfg.Serve,
 		ThemeCfg:     cfg.Theme,

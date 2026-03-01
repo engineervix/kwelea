@@ -14,7 +14,9 @@ type Site struct {
 	BaseURL      string
 	BasePath     string // URL path prefix derived from BaseURL, e.g. "/kwelea" or ""
 	Repo         string
-	RepoPlatform string // "github", "gitlab", or "" for unknown/not set
+	RepoPlatform string        // "github", "gitlab", or "" for unknown/not set
+	ExtraHead    template.HTML // verbatim HTML injected into <head>; from kwelea.toml [site].extra_head
+	ExtraFooter  template.HTML // verbatim HTML injected into <footer>; from kwelea.toml [site].extra_footer
 	BuildCfg     config.BuildConfig
 	ServeCfg     config.ServeConfig
 	ThemeCfg     config.ThemeConfig
