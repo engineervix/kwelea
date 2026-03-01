@@ -17,7 +17,7 @@ go install github.com/engineervix/kwelea@latest
 # https://github.com/engineervix/kwelea/releases/latest
 ```
 
-See the [Installation page](installation/) for platform-specific download commands.
+See the [Installation page](../installation/) for platform-specific download commands.
 
 Verify:
 
