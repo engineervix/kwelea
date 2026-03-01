@@ -19,10 +19,12 @@ type Config struct {
 
 // SiteConfig holds site-level metadata shown in every page.
 type SiteConfig struct {
-	Title   string `toml:"title"`
-	Version string `toml:"version"`
-	BaseURL string `toml:"base_url"`
-	Repo    string `toml:"repo"`
+	Title       string `toml:"title"`
+	Version     string `toml:"version"`
+	BaseURL     string `toml:"base_url"`
+	Repo        string `toml:"repo"`
+	ExtraHead   string `toml:"extra_head"`   // injected verbatim into <head> before </head>
+	ExtraFooter string `toml:"extra_footer"` // injected verbatim into <footer> after attribution
 }
 
 // BuildConfig controls where kwelea reads and writes files.

@@ -102,6 +102,7 @@ func loadTemplates(embFS fs.FS) (*template.Template, error) {
 		"templates/partials/sidebar.html",
 		"templates/partials/toc.html",
 		"templates/partials/pager.html",
+		"templates/partials/footer.html",
 		"templates/partials/dev-reload.html",
 	)
 	if err != nil {

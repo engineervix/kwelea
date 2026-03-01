@@ -11,6 +11,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="{{.Site.BasePath}}/assets/favicon/favicon-16x16.png">
 <link rel="manifest" href="{{.Site.BasePath}}/assets/favicon/site.webmanifest">
 <link rel="shortcut icon" href="{{.Site.BasePath}}/assets/favicon/favicon.ico">
+{{if .Site.ExtraHead}}{{.Site.ExtraHead}}{{end}}
 </head>
 <body>
 
@@ -71,6 +72,8 @@
 </header>
 
 {{template "page" .}}
+
+{{template "footer" .}}
 
 <!-- Search Modal -->
 <div class="search-overlay" id="searchOverlay">
