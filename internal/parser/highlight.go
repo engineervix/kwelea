@@ -16,7 +16,7 @@ import (
 //
 // The light theme uses standard .chroma selectors. Dark-theme rules are
 // prefixed with [data-theme="dark"] so they activate only when that attribute
-// is set on <html>, matching the toggle logic in _dev/docs-ui.html.
+// is set on <html>, matching the toggle logic in the template.
 func ChromaCSS(themeCfg config.ThemeConfig) (string, error) {
 	formatter := chromahtml.New(chromahtml.WithClasses(true))
 

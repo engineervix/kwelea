@@ -1,6 +1,20 @@
-/* kwelea — theme.css
- * Extracted from _dev/docs-ui.html — the design source of truth.
- * Additions: admonition styles, D2 diagram styles, self-hosted fonts.
+/* kwelea :: theme.css
+ *
+ * Design:
+ * - Aesthetic      refined utilitarian -- nothing decorative unless it serves function
+ * - Colours        warm off-whites (light) / deep ink (dark) -- not cold generic greys
+ * - Lora           serif body text for an editorial quality
+ * - IBM Plex Mono  labels, meta, code -- keeps it technical
+ * - Theming        CSS custom properties toggled via [data-theme="dark"] on <html>
+ *
+ * Contents:
+ * - Fonts               self-hosted WOFF2 (IBM Plex Sans/Mono, Lora)
+ * - Custom properties   light & dark themes
+ * - Layout              header, three-column grid, sidebar, ToC
+ * - Typography          prose, headings, inline + block code
+ * - Extensions          admonitions, D2 diagrams
+ * - Components          pager, footer, search modal
+ * - Responsive          breakpoints at 1100px, 768px, 480px
  */
 
 /* ── Fonts (self-hosted, embedded in binary) ── */
