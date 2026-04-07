@@ -86,7 +86,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: extractions/setup-just@v3
+      - uses: extractions/setup-just@v4
 
       - name: Generate release notes
         run: |
