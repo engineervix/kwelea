@@ -102,7 +102,7 @@ jobs:
           path: artifacts
           merge-multiple: true
 
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           name: ${{ steps.meta.outputs.name }}
           body_path: LATEST_RELEASE_NOTES.md
