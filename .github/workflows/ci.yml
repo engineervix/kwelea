@@ -69,7 +69,7 @@ jobs:
             -o "bin/kwelea-${GOOS}-${GOARCH}${EXT}" \
             .
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: kwelea-${{ matrix.goos }}-${{ matrix.goarch }}
           path: bin/kwelea-*
@@ -97,7 +97,7 @@ jobs:
         id: meta
         run: echo "name=${{ github.ref_name }} ($(TZ=Africa/Lusaka date --iso))" >> $GITHUB_OUTPUT
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           path: artifacts
           merge-multiple: true
