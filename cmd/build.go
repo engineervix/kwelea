@@ -10,7 +10,11 @@ import (
 	"github.com/engineervix/kwelea/internal/nav"
 )
 
-var buildBaseURL string
+var (
+	buildBaseURL string
+	buildOutput  string
+	buildSource  string
+)
 
 var buildCmd = &cobra.Command{
 	Use:   "build",
@@ -20,7 +24,9 @@ var buildCmd = &cobra.Command{
 }
 
 func init() {
-	buildCmd.Flags().StringVar(&buildBaseURL, "base-url", "", "override base_url from kwelea.toml (e.g. https://kwelea.pages.dev)")
+	buildCmd.Flags().StringVar(&buildBaseURL, "base-url", "", "override site.base_url from kwelea.toml (e.g. https://kwelea.pages.dev)")
+	buildCmd.Flags().StringVar(&buildOutput, "output", "", "override build.output_dir from kwelea.toml")
+	buildCmd.Flags().StringVar(&buildSource, "source", "", "override build.docs_dir from kwelea.toml")
 }
 
 func runBuild(cmd *cobra.Command, args []string) error {
@@ -29,8 +35,16 @@ func runBuild(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	if buildBaseURL != "" {
+	// Apply CLI flag overrides. Changed() is used (not empty-string check)
+	// so that legitimate empty values like `--base-url ""` are honoured.
+	if cmd.Flags().Changed("base-url") {
 		cfg.Site.BaseURL = buildBaseURL
+	}
+	if cmd.Flags().Changed("output") {
+		cfg.Build.OutputDir = buildOutput
+	}
+	if cmd.Flags().Changed("source") {
+		cfg.Build.DocsDir = buildSource
 	}
 
 	site, err := nav.NewSite(cfg)

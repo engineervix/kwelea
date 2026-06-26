@@ -133,3 +133,32 @@ draft: false
 | `title` | Overrides the display name derived from the filename |
 | `description` | Used in `<meta name="description">` and search results |
 | `draft` | Set `true` to exclude a page from builds and the search index |
+
+## CLI overrides
+
+Every value in `kwelea.toml` can be overridden at the command line for a single invocation. This is useful for CI/CD pipelines, monorepos, and one-off builds without editing the config.
+
+| Flag | Subcommand | Overrides |
+|------|-----------|-----------|
+| `--base-url <url>` | `build` | `[site] base_url` |
+| `--output <dir>` | `build` | `[build] output_dir` |
+| `--source <dir>` | `build`, `serve` | `[build] docs_dir` |
+
+Examples:
+
+```bash
+# Build to a platform-specific output dir (e.g. Cloudflare Pages, Netlify)
+kwelea build --output public
+kwelea build --output dist
+
+# Build docs from a non-default location
+kwelea build --source content/docs
+
+# Combine multiple overrides
+kwelea build --source content/docs --output dist --base-url https://staging.example.com
+
+# Serve docs from a different directory for live preview
+kwelea serve --source content/docs
+```
+
+When a flag is passed, it takes precedence over the config value for that run only. Omitting the flag leaves the config value unchanged.
