@@ -7,8 +7,6 @@ import (
 	"github.com/engineervix/kwelea/internal/server"
 )
 
-var serveSource string
-
 var serveCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "Start the live-reloading development server",
@@ -17,7 +15,7 @@ var serveCmd = &cobra.Command{
 }
 
 func init() {
-	serveCmd.Flags().StringVar(&serveSource, "source", "", "override build.docs_dir from kwelea.toml")
+	serveCmd.Flags().String("source", "", "override build.docs_dir from kwelea.toml")
 }
 
 func runServe(cmd *cobra.Command, args []string) error {
@@ -26,8 +24,8 @@ func runServe(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	if cmd.Flags().Changed("source") {
-		cfg.Build.DocsDir = serveSource
+	if err := applyFlagOverrides(cmd, cfg); err != nil {
+		return err
 	}
 
 	return server.Start(cfg, assets, cfgFile)
