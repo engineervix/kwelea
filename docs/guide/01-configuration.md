@@ -136,7 +136,7 @@ draft: false
 
 ## CLI overrides
 
-Every value in `kwelea.toml` can be overridden at the command line for a single invocation. This is useful for CI/CD pipelines, monorepos, and one-off builds without editing the config.
+The following `kwelea.toml` values can be overridden at the command line for a single invocation. This is useful for CI/CD pipelines, monorepos, and one-off builds without editing the config.
 
 | Flag | Subcommand | Overrides |
 |------|-----------|-----------|
@@ -161,4 +161,4 @@ kwelea build --source content/docs --output dist --base-url https://staging.exam
 kwelea serve --source content/docs
 ```
 
-When a flag is passed, it takes precedence over the config value for that run only. Omitting the flag leaves the config value unchanged.
+When a flag is passed, it takes precedence over the config value for that run only. Omitting the flag leaves the config value unchanged. Empty values (e.g. `--base-url ""`) are rejected with an error.
