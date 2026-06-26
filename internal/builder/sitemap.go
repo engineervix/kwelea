@@ -13,9 +13,9 @@ import (
 // sitemapURLSet is the top-level XML element for a sitemap.
 // See https://www.sitemaps.org/schemas/sitemap/0.9
 type sitemapURLSet struct {
-	XMLName xml.Name      `xml:"urlset"`
-	XMLNS   string        `xml:"xmlns,attr"`
-	URLs    []sitemapURL  `xml:"url"`
+	XMLName xml.Name     `xml:"urlset"`
+	XMLNS   string       `xml:"xmlns,attr"`
+	URLs    []sitemapURL `xml:"url"`
 }
 
 // sitemapURL is a single <url> entry inside the sitemap.
@@ -27,10 +27,12 @@ type sitemapURL struct {
 // and writes it to outputDir/sitemap.xml. It must be called after the site has
 // been fully built (pages walked and nav resolved).
 //
-// If the site has no base_url configured the sitemap is skipped silently —
-// without a canonical origin URL the <loc> entries would be meaningless.
+// The sitemap is skipped silently when:
+//   - base_url is not set, or
+//   - base_url is a relative path (no scheme), because sitemap <loc> entries
+//     are required to be absolute URLs per the sitemaps.org protocol.
 func writeSitemap(site *nav.Site, outputDir string) error {
-	if site.BaseURL == "" {
+	if !hasScheme(site.BaseURL) {
 		return nil
 	}
 
@@ -64,4 +66,10 @@ func writeSitemap(site *nav.Site, outputDir string) error {
 
 	outPath := filepath.Join(outputDir, "sitemap.xml")
 	return os.WriteFile(outPath, out, 0o644)
+}
+
+// hasScheme reports whether s contains a URL scheme such as "https://" or
+// "http://". A bare relative path like "/kwelea" returns false.
+func hasScheme(s string) bool {
+	return strings.HasPrefix(s, "http://") || strings.HasPrefix(s, "https://")
 }
