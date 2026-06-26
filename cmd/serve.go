@@ -28,5 +28,7 @@ func runServe(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	return server.Start(cfg, assets, cfgFile)
+	return server.Start(cfg, assets, cfgFile, func(c *config.Config) error {
+		return applyFlagOverrides(cmd, c)
+	})
 }

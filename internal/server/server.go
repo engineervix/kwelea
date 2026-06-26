@@ -30,7 +30,10 @@ const (
 //  4. Serves the output directory as a static site
 //  5. Opens the browser (unless disabled)
 //  6. Blocks until SIGINT/SIGTERM, then shuts down cleanly
-func Start(cfg *config.Config, embFS fs.FS, cfgPath string) error {
+//
+// applyOverrides is called on each config reload triggered by a kwelea.toml
+// change; it re-applies CLI flag values on top of the freshly loaded config.
+func Start(cfg *config.Config, embFS fs.FS, cfgPath string, applyOverrides func(*config.Config) error) error {
 	// Initial build so there's something to serve immediately.
 	if err := initialBuild(cfg, embFS); err != nil {
 		return err
@@ -50,7 +53,7 @@ func Start(cfg *config.Config, embFS fs.FS, cfgPath string) error {
 
 	srv := &http.Server{Handler: mux}
 
-	go watch(cfg, embFS, cfgPath, hub)
+	go watch(cfg, embFS, cfgPath, hub, applyOverrides)
 
 	addr := fmt.Sprintf("http://localhost:%d", port)
 	fmt.Printf("→ starting dev server on %s\n", addr)
