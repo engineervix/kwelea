@@ -14,10 +14,19 @@ var serveCmd = &cobra.Command{
 	RunE:  runServe,
 }
 
+func init() {
+	serveCmd.Flags().String("source", "", "override build.docs_dir from kwelea.toml")
+}
+
 func runServe(cmd *cobra.Command, args []string) error {
 	cfg, err := config.Load(cfgFile)
 	if err != nil {
 		return err
 	}
+
+	if err := applyFlagOverrides(cmd, cfg); err != nil {
+		return err
+	}
+
 	return server.Start(cfg, assets, cfgFile)
 }
