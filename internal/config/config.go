@@ -23,6 +23,7 @@ type SiteConfig struct {
 	Version     string `toml:"version"`
 	BaseURL     string `toml:"base_url"`
 	Repo        string `toml:"repo"`
+	OGImage     string `toml:"og_image"`     // default social preview image URL (absolute or path)
 	ExtraHead   string `toml:"extra_head"`   // injected verbatim into <head> before </head>
 	ExtraFooter string `toml:"extra_footer"` // injected verbatim into <footer> after attribution
 }

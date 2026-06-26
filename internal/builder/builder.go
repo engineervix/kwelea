@@ -19,6 +19,8 @@ type PageData struct {
 	SectionLabel string // nav section containing this page (empty for root pages)
 	DevMode      bool   // true only during `kwelea serve`
 	SourceURL    string // URL path to the co-located raw Markdown source file
+	OGURL        string // absolute canonical URL for og:url (empty when base_url is not set)
+	OGImage      string // social preview image URL for og:image (empty when none configured)
 }
 
 // Build runs the full Phase 4 pipeline:
@@ -136,6 +138,8 @@ func renderPage(tmpl *template.Template, site *nav.Site, page *nav.Page, outputD
 		SectionLabel: sectionFor(site, page.Path),
 		DevMode:      devMode,
 		SourceURL:    sourceURL(site, page),
+		OGURL:        ogURL(site, page),
+		OGImage:      ogImage(site, page),
 	}
 	return tmpl.ExecuteTemplate(f, "layout.html", data)
 }
@@ -174,6 +178,25 @@ func writeMDSource(page *nav.Page, docsDir, outputDir string) error {
 // e.g. page.Path "/getting-started/" → "/getting-started/source.md"
 func sourceURL(_ *nav.Site, page *nav.Page) string {
 	return page.Path + "source.md"
+}
+
+// ogURL returns the absolute canonical URL for the page (base_url + path),
+// or an empty string when base_url is not configured.
+func ogURL(site *nav.Site, page *nav.Page) string {
+	if site.BaseURL == "" {
+		return ""
+	}
+	return strings.TrimRight(site.BaseURL, "/") + page.Path
+}
+
+// ogImage resolves the social preview image URL for the page.
+// A per-page image (from frontmatter) takes precedence over the site-level
+// default ([site] og_image). Returns an empty string when neither is set.
+func ogImage(site *nav.Site, page *nav.Page) string {
+	if page.Image != "" {
+		return page.Image
+	}
+	return site.OGImage
 }
 
 // sectionFor returns the NavSection label for the given URL path, or "" if the

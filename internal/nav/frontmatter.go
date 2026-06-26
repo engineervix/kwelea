@@ -8,6 +8,7 @@ type Frontmatter struct {
 	Title       string
 	Description string
 	Draft       bool
+	Image       string // per-page social preview image URL
 }
 
 // parseFrontmatter splits a Markdown file's content into its front matter
@@ -54,6 +55,8 @@ func parseFrontmatter(content string) (Frontmatter, string, error) {
 			fm.Description = val
 		case "draft":
 			fm.Draft = val == "true"
+		case "image":
+			fm.Image = val
 		}
 	}
 
