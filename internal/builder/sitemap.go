@@ -68,8 +68,15 @@ func writeSitemap(site *nav.Site, outputDir string) error {
 	return os.WriteFile(outPath, out, 0o644)
 }
 
-// hasScheme reports whether s contains a URL scheme such as "https://" or
-// "http://". A bare relative path like "/kwelea" returns false.
+// hasScheme reports whether s is an absolute URL with an http or https
+// scheme and a non-empty host. A bare relative path like "/kwelea" or a
+// scheme-only string like "https://" returns false.
 func hasScheme(s string) bool {
-	return strings.HasPrefix(s, "http://") || strings.HasPrefix(s, "https://")
+	if strings.HasPrefix(s, "https://") {
+		return len(s) > len("https://") && s[len("https://")] != '/'
+	}
+	if strings.HasPrefix(s, "http://") {
+		return len(s) > len("http://") && s[len("http://")] != '/'
+	}
+	return false
 }

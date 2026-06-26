@@ -21,6 +21,9 @@ func TestHasScheme(t *testing.T) {
 		{"/kwelea", false},
 		{"kwelea", false},
 		{"ftp://files.example.com", false},
+		{"https://", false},
+		{"http://", false},
+		{"https:///", false},
 	}
 	for _, tc := range tests {
 		t.Run(tc.in, func(t *testing.T) {

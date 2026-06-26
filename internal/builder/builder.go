@@ -89,7 +89,8 @@ func Build(site *nav.Site, embFS fs.FS, devMode bool) error {
 		return fmt.Errorf("writing search index: %w", err)
 	}
 
-	// Pass 4: write sitemap.xml (skipped silently when base_url is not set).
+	// Pass 4: write sitemap.xml (skipped silently when base_url is not set
+	// or is not an absolute URL with a scheme and host).
 	if err := writeSitemap(site, outputDir); err != nil {
 		return fmt.Errorf("writing sitemap: %w", err)
 	}
