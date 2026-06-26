@@ -52,6 +52,7 @@ func WalkDocs(docsDir string) ([]*Page, error) {
 			Title:                title,
 			TitleFromFrontmatter: fm.Title != "",
 			Description:          fm.Description,
+			Image:                fm.Image,
 			Path:                 fileToURLPath(relPath),
 			FilePath:             relPath,
 		})

@@ -15,6 +15,7 @@ type Site struct {
 	BasePath     string // URL path prefix derived from BaseURL, e.g. "/kwelea" or ""
 	Repo         string
 	RepoPlatform string        // "github", "gitlab", or "" for unknown/not set
+	OGImage      string        // default social preview image URL from [site] og_image
 	ExtraHead    template.HTML // verbatim HTML injected into <head>; from kwelea.toml [site].extra_head
 	ExtraFooter  template.HTML // verbatim HTML injected into <footer>; from kwelea.toml [site].extra_footer
 	BuildCfg     config.BuildConfig
@@ -45,6 +46,7 @@ type Page struct {
 	Title                string
 	TitleFromFrontmatter bool // true when Title came from frontmatter; false when derived from filename
 	Description          string
+	Image                string // per-page social preview image URL (from frontmatter)
 	Path                 string        // canonical URL path, e.g. /getting-started/
 	FilePath             string        // source .md file, relative to docs_dir
 	HTML                 template.HTML // filled by parser (Phase 3)

@@ -211,6 +211,7 @@ func NewSite(cfg *config.Config) (*Site, error) {
 		BasePath:     basePath,
 		Repo:         cfg.Site.Repo,
 		RepoPlatform: repoplatform(cfg.Site.Repo),
+		OGImage:      cfg.Site.OGImage,
 		ExtraHead:    template.HTML(cfg.Site.ExtraHead),
 		ExtraFooter:  template.HTML(cfg.Site.ExtraFooter),
 		BuildCfg:     cfg.Build,

@@ -12,7 +12,17 @@
 <link rel="manifest" href="{{.Site.BasePath}}/assets/favicon/site.webmanifest">
 <link rel="shortcut icon" href="{{.Site.BasePath}}/assets/favicon/favicon.ico">
 <link rel="sitemap" type="application/xml" href="{{.Site.BasePath}}/sitemap.xml">
-{{if .Site.ExtraHead}}{{.Site.ExtraHead}}{{end}}
+{{if .OGURL}}<meta property="og:type" content="website">
+<meta property="og:title" content="{{if .Page.Title}}{{.Page.Title}} — {{end}}{{.Site.Title}}">
+<meta property="og:description" content="{{.Page.Description}}">
+<meta property="og:url" content="{{.OGURL}}">
+<meta property="og:site_name" content="{{.Site.Title}}">
+{{if .OGImage}}<meta property="og:image" content="{{.OGImage}}">
+{{end}}<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{if .Page.Title}}{{.Page.Title}} — {{end}}{{.Site.Title}}">
+<meta name="twitter:description" content="{{.Page.Description}}">
+{{if .OGImage}}<meta name="twitter:image" content="{{.OGImage}}">
+{{end}}{{end}}{{if .Site.ExtraHead}}{{.Site.ExtraHead}}{{end}}
 </head>
 <body>
 
