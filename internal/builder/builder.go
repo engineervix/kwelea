@@ -181,9 +181,11 @@ func sourceURL(_ *nav.Site, page *nav.Page) string {
 }
 
 // ogURL returns the absolute canonical URL for the page (base_url + path),
-// or an empty string when base_url is not configured.
+// or an empty string when base_url is not set or is a relative path.
+// Open Graph requires og:url to be an absolute URL, so a relative base_url
+// is treated the same as no base_url.
 func ogURL(site *nav.Site, page *nav.Page) string {
-	if site.BaseURL == "" {
+	if !hasScheme(site.BaseURL) {
 		return ""
 	}
 	return strings.TrimRight(site.BaseURL, "/") + page.Path
@@ -192,11 +194,22 @@ func ogURL(site *nav.Site, page *nav.Page) string {
 // ogImage resolves the social preview image URL for the page.
 // A per-page image (from frontmatter) takes precedence over the site-level
 // default ([site] og_image). Returns an empty string when neither is set.
+//
+// When base_url is an absolute URL, a relative image path (starting with "/")
+// is resolved against it. A fully qualified image URL is returned verbatim.
 func ogImage(site *nav.Site, page *nav.Page) string {
-	if page.Image != "" {
-		return page.Image
+	img := page.Image
+	if img == "" {
+		img = site.OGImage
 	}
-	return site.OGImage
+	if img == "" {
+		return ""
+	}
+	if hasScheme(img) || !hasScheme(site.BaseURL) {
+		return img
+	}
+	// Resolve relative image path against base_url.
+	return strings.TrimRight(site.BaseURL, "/") + img
 }
 
 // sectionFor returns the NavSection label for the given URL path, or "" if the
