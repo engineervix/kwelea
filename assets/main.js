@@ -228,7 +228,12 @@ if (headings.length > 0 && tocLinks.length > 0) {
 
 // ── Code copy buttons ──
 // Goldmark wraps highlighted code in .highlight > pre; plain code is just pre.
+// Code blocks with a title or line highlights render with Chroma's
+// table-mode line numbers, which emits a second <pre> for the gutter
+// column (no <code> inside). Skip it so it doesn't get its own (broken —
+// it would copy line numbers, not code) button.
 document.querySelectorAll('.prose pre').forEach(pre => {
+  if (!pre.querySelector('code')) return;
   const btn = document.createElement('button');
   btn.className = 'code-copy';
   btn.textContent = 'copy';

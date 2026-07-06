@@ -454,32 +454,42 @@ body {
   margin: 0;
 }
 
+/* Chroma's line numbers are rendered inline (WithLineNumbers, no
+   LineNumbersInTable) — the "chroma" class lands on the <pre> itself, not
+   on a wrapping <div>, so there's a single element to reset here. */
 .prose .code-block .code-body .chroma {
-  margin: 0;
-}
-
-.prose .code-block .code-body .chroma pre {
   margin: 0;
   border: 0;
   border-radius: 0;
   background: transparent;
 }
 
-/* highlighted lines: a soft accent wash that works in both themes */
-.prose .code-block .highlight-line {
-  /* display:inline-block would break the inline flow inside <code>; we
-     paint the background on a block element via padding + line-height
-     and rely on the surrounding <span class="cl"> to keep tokens on
-     their own line. */
+/* highlighted lines: a soft accent wash that works in both themes.
+   Chroma's own generated CSS already sets `.chroma .line { display: flex }`
+   (see chroma.css) so every line is a full-width flex row — we only need
+   to add the background on top of that, not redeclare layout. Overriding
+   display here (e.g. inline-block) breaks Chroma's layout for consecutive
+   highlighted lines.
+
+   The wash bleeds into .prose pre's own 1.5rem horizontal padding (same
+   negative-margin/padding technique mkdocs-material's .hll and VitePress's
+   .highlighted use) so it reaches the card's edges instead of stopping at
+   the code text's own inset.
+
+   Selector is deliberately as deep as the real DOM nesting (.prose
+   .code-block .code-body .chroma .highlight-line — 5 classes): Chroma's
+   own light-theme .hl rule is now scoped under :root:not([data-theme=
+   "dark"]) (see ChromaCSS), which makes it 4 classes deep, so anything
+   shallower than 5 here would lose to Chroma's grey and never show. */
+.prose .code-block .code-body .chroma .highlight-line {
   background: var(--accent-dim);
-  box-shadow: inset 3px 0 0 var(--accent);
-  display: inline-block;
-  width: 100%;
+  margin: 0 -1.5rem;
+  padding: 0 1.5rem;
 }
 
-[data-theme="dark"] .prose .code-block .highlight-line {
+[data-theme="dark"] .prose .code-block .code-body .chroma .highlight-line {
   /* The light-theme accent-dim is too saturated for dark mode — dial
-     it back by relying on the inset accent bar for emphasis. */
+     it back so token colours stay legible on top of it. */
   background: rgba(96, 165, 250, 0.08);
 }
 

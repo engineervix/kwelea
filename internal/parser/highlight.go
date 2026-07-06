@@ -24,11 +24,29 @@ import (
 // ChromaCSS generates a combined Chroma syntax-highlighting CSS string for
 // both the light and dark themes specified in themeCfg.
 //
-// The light theme uses standard .chroma selectors. Dark-theme rules are
-// prefixed with [data-theme="dark"] so they activate only when that attribute
-// is set on <html>, matching the toggle logic in the template.
+// Both themes' rules are scoped — light to :root:not([data-theme="dark"]),
+// dark to [data-theme="dark"] — so they activate only for their matching
+// attribute value, matching the toggle logic in the template.
+//
+// Scoping the light rules (not just the dark ones) matters: a Chroma style
+// commonly leaves some token types with no explicit colour, relying on the
+// base foreground colour instead (e.g. github-dark has no entry for plain
+// identifiers or punctuation). If light rules were left unscoped, that
+// unscoped light-theme colour would directly match the element in dark
+// mode too — and a rule that directly matches an element always wins over
+// a colour the element would otherwise inherit from .chroma's own
+// (correctly dark) base colour, regardless of [data-theme="dark"]
+// specificity. The result was barely-legible dark-navy text on a dark
+// background for any token the dark style doesn't explicitly colour.
+//
+// WithLineNumbers must match the options used by renderCodeBlockBody so
+// this generates the matching ".ln"/"line" CSS — plain highlighted blocks
+// never emit that markup, so the extra rules are simply unused for them.
 func ChromaCSS(themeCfg config.ThemeConfig) (string, error) {
-	formatter := chromahtml.New(chromahtml.WithClasses(true))
+	formatter := chromahtml.New(
+		chromahtml.WithClasses(true),
+		chromahtml.WithLineNumbers(true),
+	)
 
 	lightStyle := styles.Get(themeCfg.LightCodeTheme)
 	if lightStyle == nil {
@@ -39,20 +57,19 @@ func ChromaCSS(themeCfg config.ThemeConfig) (string, error) {
 		darkStyle = styles.Fallback
 	}
 
-	var buf bytes.Buffer
-
-	// Light theme — standard selectors.
-	if err := formatter.WriteCSS(&buf, lightStyle); err != nil {
+	var lightBuf bytes.Buffer
+	if err := formatter.WriteCSS(&lightBuf, lightStyle); err != nil {
 		return "", fmt.Errorf("generating light Chroma CSS (%s): %w", themeCfg.LightCodeTheme, err)
 	}
 
-	buf.WriteString("\n")
-
-	// Dark theme — prefix every selector with [data-theme="dark"].
 	var darkBuf bytes.Buffer
 	if err := formatter.WriteCSS(&darkBuf, darkStyle); err != nil {
 		return "", fmt.Errorf("generating dark Chroma CSS (%s): %w", themeCfg.DarkCodeTheme, err)
 	}
+
+	var buf bytes.Buffer
+	buf.WriteString(prefixCSSSelectors(lightBuf.String(), `:root:not([data-theme="dark"])`))
+	buf.WriteString("\n")
 	buf.WriteString(prefixCSSSelectors(darkBuf.String(), `[data-theme="dark"]`))
 
 	return buf.String(), nil
@@ -102,7 +119,7 @@ func prefixCSSSelectors(css, prefix string) string {
 //     overhead — the common case is unchanged.
 //
 //   - codeAttrsNodeRenderer renders CodeBlockNode by formatting the source
-//     with Chroma in line-numbered table mode, post-processing the output
+//     with Chroma using inline line numbers, post-processing the output
 //     to add class="highlight-line" to the matching <span class="line">
 //     rows, and wrapping the whole thing in <figure class="code-block">
 //     with an optional <div class="code-title"> above the <pre>.
@@ -457,11 +474,15 @@ func (r *codeAttrsRenderer) renderCodeBlock(w util.BufWriter, _ []byte, node gol
 	return goldmarkast.WalkContinue, nil
 }
 
-// renderCodeBlockBody formats source through Chroma in line-numbered table
-// mode, then post-processes the output to add the highlight-line class to
-// the <span class="line"> rows matching n.Lines. The result is the inner
-// HTML of the <figure class="code-block"> — i.e. the chroma <div class=
-// "chroma">…</div> tree, with one class edit per highlighted line.
+// renderCodeBlockBody formats source through Chroma with inline line
+// numbers (WithLineNumbers, no LineNumbersInTable — the number sits inside
+// the same per-line flex row as the code, not in a second <pre>/<table>
+// column; that guarantees gutter/code stay on identical rows and avoids
+// needing to fight table auto-layout for column widths), then
+// post-processes the output to add the highlight-line class to the
+// <span class="line"> rows matching n.Lines. The result is the inner HTML
+// of the <figure class="code-block"> — i.e. the chroma <pre class=
+// "chroma">…</pre>, with one class edit per highlighted line.
 //
 // Only the light style is needed: WithClasses(true) means the actual
 // colours come from the separate [data-theme="dark"] stylesheet generated
@@ -495,7 +516,6 @@ func renderCodeBlockBody(n *CodeBlockNode, lightStyleName string) (string, error
 	opts := []chromahtml.Option{
 		chromahtml.WithClasses(true),
 		chromahtml.WithLineNumbers(true),
-		chromahtml.LineNumbersInTable(true),
 	}
 	if len(hlRanges) > 0 {
 		opts = append(opts, chromahtml.HighlightLines(hlRanges))
@@ -514,16 +534,15 @@ func renderCodeBlockBody(n *CodeBlockNode, lightStyleName string) (string, error
 }
 
 // injectHighlightClass rewrites the per-line <span class="line …"> tags
-// emitted by Chroma's table-mode line-numbering formatter to add the
-// project-level highlight-line class. It does this by tracking the current
-// 1-indexed line number and, for every <span class="line …"> it sees,
-// checking membership in the highlight set.
+// emitted by Chroma's line-numbering formatter to add the project-level
+// highlight-line class. It does this by tracking the current 1-indexed
+// line number and, for every <span class="line …"> it sees, checking
+// membership in the highlight set.
 //
-// We do the counting manually rather than relying on the line number
-// rendered in the gutter: the gutter markup wraps each line number in its
-// own <span> and is awkward to parse, while <span class="line"> appears
-// exactly once per code line and is the canonical anchor for per-line
-// decoration.
+// We do the counting manually rather than relying on the rendered line
+// number text: the number sits in its own nested <span class="ln"> and is
+// awkward to parse reliably, while <span class="line"> appears exactly
+// once per code line and is the canonical anchor for per-line decoration.
 func injectHighlightClass(html string, lines map[int]bool) string {
 	if len(lines) == 0 {
 		return html
