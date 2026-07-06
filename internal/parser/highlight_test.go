@@ -134,6 +134,28 @@ func TestParseHighlightRangesBadBraces(t *testing.T) {
 	}
 }
 
+func TestParseHighlightRangesOversizedRangeDropped(t *testing.T) {
+	// A typo like {2-2000000000} must not try to expand billions of line
+	// numbers — the whole range is dropped, same as any other malformed
+	// input. This must return promptly rather than hang.
+	got := parseHighlightRanges("{2-2000000000}")
+	if len(got) != 0 {
+		t.Errorf("oversized range should be dropped, got %d entries", len(got))
+	}
+}
+
+func TestParseHighlightRangesAtCapAllowed(t *testing.T) {
+	// A range exactly at the cap is still valid.
+	got := parseHighlightRanges("{1-10000}")
+	if len(got) != 10000 {
+		t.Errorf("expected 10000 entries at the cap, got %d", len(got))
+	}
+	// One past the cap is dropped.
+	if got := parseHighlightRanges("{1-10001}"); len(got) != 0 {
+		t.Errorf("expected range one past the cap to be dropped, got %d entries", len(got))
+	}
+}
+
 // ----- injectHighlightClass -----
 
 func TestInjectHighlightClassSkipsEmpty(t *testing.T) {

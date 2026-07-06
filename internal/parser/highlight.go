@@ -149,7 +149,7 @@ func parseCodeBlockInfo(info string) codeBlockAttrs {
 	// single token (no whitespace) and starts with an attribute like
 	// title=… or {…}, treat the entire string as the attribute list —
 	// there is no real language in that case.
-	hasWS := strings.ContainsAny(rest, " 	")
+	hasWS := strings.ContainsAny(rest, " \t")
 	if hasWS {
 		rest = stripLanguageToken(rest)
 	}
@@ -189,26 +189,11 @@ func parseCodeBlockInfo(info string) codeBlockAttrs {
 // input as attribute syntax in that case.
 func stripLanguageToken(s string) string {
 	for i := 0; i < len(s); i++ {
-		if s[i] == ' ' || s[i] == '	' {
+		if s[i] == ' ' || s[i] == '\t' {
 			return strings.TrimSpace(s[i+1:])
 		}
 	}
 	return ""
-}
-
-// looksLikeSingleAttr reports whether the info string contains no
-// whitespace and starts with a kwelea attribute (title= or {…}). In that
-// case the whole string is treated as the attribute list, with no
-// language.
-func looksLikeSingleAttr(s string) bool {
-	s = strings.TrimSpace(s)
-	if s == "" {
-		return false
-	}
-	if strings.ContainsAny(s, " 	") {
-		return false
-	}
-	return strings.HasPrefix(s, "title=") || strings.HasPrefix(s, "{")
 }
 
 // joinFencedLines concatenates the raw bytes of every line in a fenced
@@ -278,6 +263,14 @@ func unquoteAttr(s string) (string, bool) {
 	return "", false
 }
 
+// maxHighlightRangeLines caps how many lines a single {lo-hi} range may
+// expand to. Without this, a typo (e.g. {2-2000000000} instead of
+// {2-2000000}) would try to build a slice with billions of entries and hang
+// the build. Real fenced code blocks never come close to this many lines,
+// so a range this large is almost certainly a mistake and is dropped like
+// any other malformed input.
+const maxHighlightRangeLines = 10000
+
 // parseHighlightRanges parses a "{n,m-p,…}" expression and returns the
 // 1-indexed line numbers it contains. Invalid numbers and empty ranges
 // (e.g. {3-2}) are skipped; the rest of the expression still parses.
@@ -298,7 +291,7 @@ func parseHighlightRanges(s string) []int {
 		if idx := strings.Index(part, "-"); idx >= 0 {
 			lo, errLo := strconv.Atoi(strings.TrimSpace(part[:idx]))
 			hi, errHi := strconv.Atoi(strings.TrimSpace(part[idx+1:]))
-			if errLo != nil || errHi != nil || lo < 1 || hi < lo {
+			if errLo != nil || errHi != nil || lo < 1 || hi < lo || hi-lo+1 > maxHighlightRangeLines {
 				continue
 			}
 			for ln := lo; ln <= hi; ln++ {
@@ -378,49 +371,20 @@ func (t *codeAttrsTransformer) Transform(doc *goldmarkast.Document, reader text.
 		}
 		infoStr := string(info)
 
-		// Goldmark treats the first whitespace-delimited token as the
-		// language. If the entire info string is a single token (no
-		// whitespace) and that token is itself a kwelea attribute, there
-		// is no real language — the whole string is the attribute list.
-		// In that case, parse it directly.
-		if looksLikeSingleAttr(infoStr) {
-			attrs := parseCodeBlockInfo(infoStr)
-			if !attrs.hasTitle() && !attrs.hasHighlights() {
-				return goldmarkast.WalkContinue, nil
-			}
-			replacements = append(replacements, replacement{
-				old: fcb,
-				newNode: &CodeBlockNode{
-					Language:     "",
-					Title:        attrs.title,
-					Highlight:    attrs.highlight,
-					HighlightSet: attrs.highlightSet,
-					Source:       joinFencedLines(fcb, src),
-				},
-			})
-			return goldmarkast.WalkContinue, nil
-		}
-
 		attrs := parseCodeBlockInfo(infoStr)
 		if !attrs.hasTitle() && !attrs.hasHighlights() {
 			return goldmarkast.WalkContinue, nil
-		}
-
-		// Collect the raw source lines.
-		var srcBuf bytes.Buffer
-		lineCount := fcb.Lines().Len()
-		for i := 0; i < lineCount; i++ {
-			line := fcb.Lines().At(i)
-			srcBuf.Write(line.Value(src))
 		}
 
 		lang := ""
 		if fcb.Language(src) != nil {
 			lang = string(fcb.Language(src))
 		}
-		// If the goldmark-reported language is itself a kwelea attribute
-		// (single-token info with no whitespace), it's not a real
-		// language — clear it.
+		// Goldmark treats the first whitespace-delimited token as the
+		// language. If the entire info string is a single token (no
+		// whitespace), goldmark reports that whole token as the
+		// language — so if it's itself a kwelea attribute (title= or
+		// {…}), it's not a real language and must be cleared.
 		if strings.ContainsAny(lang, "={") {
 			lang = ""
 		}
@@ -432,7 +396,7 @@ func (t *codeAttrsTransformer) Transform(doc *goldmarkast.Document, reader text.
 				Title:        attrs.title,
 				Highlight:    attrs.highlight,
 				HighlightSet: attrs.highlightSet,
-				Source:       srcBuf.Bytes(),
+				Source:       joinFencedLines(fcb, src),
 			},
 		})
 		return goldmarkast.WalkContinue, nil
@@ -453,7 +417,6 @@ func (t *codeAttrsTransformer) Transform(doc *goldmarkast.Document, reader text.
 // highlight-line where requested.
 type codeAttrsRenderer struct {
 	lightStyle string
-	darkStyle  string
 }
 
 // renderCodeBlock emits:
@@ -471,7 +434,7 @@ func (r *codeAttrsRenderer) renderCodeBlock(w util.BufWriter, _ []byte, node gol
 	}
 	n := node.(*CodeBlockNode)
 
-	body, err := renderCodeBlockBody(n, r.lightStyle, r.darkStyle)
+	body, err := renderCodeBlockBody(n, r.lightStyle)
 	if err != nil {
 		// Fall back to a plain escaped <pre> so a Chroma failure never
 		// breaks the whole page. The error is swallowed; the
@@ -499,7 +462,13 @@ func (r *codeAttrsRenderer) renderCodeBlock(w util.BufWriter, _ []byte, node gol
 // the <span class="line"> rows matching n.Lines. The result is the inner
 // HTML of the <figure class="code-block"> — i.e. the chroma <div class=
 // "chroma">…</div> tree, with one class edit per highlighted line.
-func renderCodeBlockBody(n *CodeBlockNode, lightStyleName, darkStyleName string) (string, error) {
+//
+// Only the light style is needed: WithClasses(true) means the actual
+// colours come from the separate [data-theme="dark"] stylesheet generated
+// by ChromaCSS, not from re-rendering with a dark chroma.Style (same
+// reasoning as highlighting.WithStyle(themeCfg.LightCodeTheme) in
+// newMarkdown).
+func renderCodeBlockBody(n *CodeBlockNode, lightStyleName string) (string, error) {
 	style := styles.Get(lightStyleName)
 	if style == nil {
 		style = styles.Fallback
@@ -640,16 +609,15 @@ func rewriteLineOpenTag(tag string) string {
 // codeAttrsExtension bundles the AST transformer and the node renderer.
 type codeAttrsExtension struct {
 	lightStyle string
-	darkStyle  string
 }
 
 // NewCodeAttrsExtension returns a goldmark.Extender that adds title and
-// line-highlight support to fenced code blocks. The theme names match the
-// ones used to build the chroma stylesheet (see ChromaCSS).
+// line-highlight support to fenced code blocks. The theme name matches the
+// one used to build the chroma stylesheet (see ChromaCSS); only the light
+// style is needed (see renderCodeBlockBody).
 func NewCodeAttrsExtension(themeCfg config.ThemeConfig) goldmark.Extender {
 	return &codeAttrsExtension{
 		lightStyle: themeCfg.LightCodeTheme,
-		darkStyle:  themeCfg.DarkCodeTheme,
 	}
 }
 
@@ -663,7 +631,6 @@ func (e *codeAttrsExtension) Extend(m goldmark.Markdown) {
 		renderer.WithNodeRenderers(
 			util.Prioritized(&codeAttrsRenderer{
 				lightStyle: e.lightStyle,
-				darkStyle:  e.darkStyle,
 			}, 200),
 		),
 	)
