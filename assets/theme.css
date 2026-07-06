@@ -427,6 +427,62 @@ body {
   margin: 0;
 }
 
+/* ── Code block: title bar and line highlighting (#6) ── */
+.prose .code-block {
+  margin: 1.25rem 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--code-bg);
+}
+
+.prose .code-block .code-title {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-2);
+  background: var(--bg-alt);
+  padding: 0.45rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  /* show the user a full filename even when the underlying string is long */
+  word-break: break-all;
+}
+
+.prose .code-block .code-body {
+  /* reset the outer .prose pre margin so the border doesn't double up */
+  margin: 0;
+}
+
+.prose .code-block .code-body .chroma {
+  margin: 0;
+}
+
+.prose .code-block .code-body .chroma pre {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+/* highlighted lines: a soft accent wash that works in both themes */
+.prose .code-block .highlight-line {
+  /* display:inline-block would break the inline flow inside <code>; we
+     paint the background on a block element via padding + line-height
+     and rely on the surrounding <span class="cl"> to keep tokens on
+     their own line. */
+  background: var(--accent-dim);
+  box-shadow: inset 3px 0 0 var(--accent);
+  display: inline-block;
+  width: 100%;
+}
+
+[data-theme="dark"] .prose .code-block .highlight-line {
+  /* The light-theme accent-dim is too saturated for dark mode — dial
+     it back by relying on the inset accent bar for emphasis. */
+  background: rgba(96, 165, 250, 0.08);
+}
+
 .code-copy {
   position: absolute;
   top: 0.6rem;
