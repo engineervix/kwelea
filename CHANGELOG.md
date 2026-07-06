@@ -2,6 +2,51 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.6](https://github.com/engineervix/kwelea/compare/v0.1.5...v0.1.6) (2026-07-06)
+
+
+### 🚀 Features
+
+* add --output and --source CLI flags to override build dirs ([59b58bf](https://github.com/engineervix/kwelea/commit/59b58bfb178e79c5cef4b4e307dc3c06337456f7)), closes [#15](https://github.com/engineervix/kwelea/issues/15)
+* add Open Graph and Twitter Card meta tags ([ac962fe](https://github.com/engineervix/kwelea/commit/ac962fe03e2aac6c47f4377bc0aa7173915e3454)), closes [#11](https://github.com/engineervix/kwelea/issues/11)
+* generate sitemap.xml at build time ([ce2db31](https://github.com/engineervix/kwelea/commit/ce2db31765efb661b4b47b06114ba08edf59cb66)), closes [#4](https://github.com/engineervix/kwelea/issues/4)
+* **parser:** add code block title and line highlighting ([9561183](https://github.com/engineervix/kwelea/commit/9561183fe95191ed19fec9f7c61b10aa7f6fe0f8))
+
+
+### 🐛 Bug Fixes
+
+* **deps:** update module github.com/alecthomas/chroma/v2 to v2.27.0 ([#32](https://github.com/engineervix/kwelea/issues/32)) ([e930256](https://github.com/engineervix/kwelea/commit/e930256bce55ff0ecad49c05ec65fe383473c0fc))
+* **parser:** cap highlight ranges, drop dead code paths in code-attrs extension ([10722b6](https://github.com/engineervix/kwelea/commit/10722b624ab67847b880f6ee0ad5aa6b84ef4bce)), closes [#41](https://github.com/engineervix/kwelea/issues/41)
+* **parser:** fix code-block highlight rendering and site-wide dark-mode colours ([4f1a492](https://github.com/engineervix/kwelea/commit/4f1a49276e56545b7e1f03ab888618d689741e72))
+* reject empty values for --base-url, --output, --source ([d5cad54](https://github.com/engineervix/kwelea/commit/d5cad549a3f631f4a790279244f45dc423e1ab4f))
+* **server:** reload kwelea.toml on change during serve ([cc85047](https://github.com/engineervix/kwelea/commit/cc850473fb2a355212bb52e4118b4f7a13e1d1df)), closes [#38](https://github.com/engineervix/kwelea/issues/38)
+* tighten hasScheme to require non-empty host, update comments ([cd9f347](https://github.com/engineervix/kwelea/commit/cd9f34743b1e0ff8f79c5393ddbb41908acfed06)), closes [#35](https://github.com/engineervix/kwelea/issues/35)
+* validate base_url has a scheme, add sitemap tests ([5defcdb](https://github.com/engineervix/kwelea/commit/5defcdbd59c05461f414e4ea40dd0a9cdb4a6df1)), closes [#35](https://github.com/engineervix/kwelea/issues/35)
+* validate base_url has scheme, resolve relative og:image paths ([6574e39](https://github.com/engineervix/kwelea/commit/6574e394cc0daec0ac7f38560c1dd74fab61d9c5)), closes [#36](https://github.com/engineervix/kwelea/issues/36)
+
+
+### 📝 Docs
+
+* clarify which kwelea.toml values can be overridden via CLI ([f0bbd4b](https://github.com/engineervix/kwelea/commit/f0bbd4b072c01e5fa06e7119cf0d9776892ea059))
+* document macOS Gatekeeper workaround for downloaded binaries ([e9488a2](https://github.com/engineervix/kwelea/commit/e9488a2c6153c2463801d8dee531a04110b0c9d5))
+
+
+### ♻️ Code Refactoring
+
+* extract applyFlagOverrides helper, drop package-level flag vars ([aedabc2](https://github.com/engineervix/kwelea/commit/aedabc296b4d6e91be8f8e2f6e1a2a240e67e907))
+
+
+### ⚙️ Build System
+
+* **deps:** update module github.com/alecthomas/chroma/v2 to v2.23.1 ([#22](https://github.com/engineervix/kwelea/issues/22)) ([d359305](https://github.com/engineervix/kwelea/commit/d3593055b360e33c464fd2f795c0d7f50c90908c))
+* **deps:** update module github.com/fsnotify/fsnotify to v1.10.1 ([#33](https://github.com/engineervix/kwelea/issues/33)) ([5dee633](https://github.com/engineervix/kwelea/commit/5dee63308c0b35054f18c590e5596f83e0b1434e))
+* **deps:** update module github.com/yuin/goldmark to v1.8.2 ([#23](https://github.com/engineervix/kwelea/issues/23)) ([2e7e406](https://github.com/engineervix/kwelea/commit/2e7e40635909dea1228f49058c41fd67ea9b5299))
+
+
+### 👷 CI/CD
+
+* **deps:** update actions/checkout action to v7 ([#34](https://github.com/engineervix/kwelea/issues/34)) ([d63eda7](https://github.com/engineervix/kwelea/commit/d63eda764a950911d7c26471d97e96a96915f05f))
+
 ## [0.1.5](https://github.com/engineervix/kwelea/compare/v0.1.4...v0.1.5) (2026-03-01)
 
 
