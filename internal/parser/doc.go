@@ -18,4 +18,10 @@
 //
 //   - D2 diagrams: fenced code blocks with language "d2" are compiled to
 //     inline SVG pairs (light + dark) using the D2 Go library.
+//
+//   - Code-block title and line highlighting: fenced code blocks accept
+//     title="…" and {n,m-p} attributes on the opening fence. The title is
+//     rendered as a label bar above the block; the range is applied as a
+//     class="highlight-line" on the matching lines. Implementation lives in
+//     highlight.go (NewCodeAttrsExtension).
 package parser

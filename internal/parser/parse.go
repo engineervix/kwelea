@@ -75,6 +75,7 @@ func extractAndStripH1(doc goldmarkast.Node, src []byte) string {
 // newMarkdown returns a goldmark.Markdown configured with all kwelea extensions:
 //   - GFM (tables, strikethrough, linkify, task lists)
 //   - Syntax highlighting using Chroma CSS classes (dual-theme via ChromaCSS)
+//   - Code-block title and line-highlight attributes (```go title="…" {2,4-6})
 //   - Admonitions (:::)
 //   - D2 diagrams (```d2 fenced blocks)
 //   - Auto-heading IDs for ToC extraction
@@ -90,6 +91,7 @@ func newMarkdown(themeCfg config.ThemeConfig) goldmark.Markdown {
 					chromahtml.WithClasses(true),
 				),
 			),
+			NewCodeAttrsExtension(themeCfg),
 			Admonitions,
 			NewD2Extension(),
 		),
